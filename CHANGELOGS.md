@@ -56,14 +56,22 @@
 ## **Zylo-Beta-v1.2.1** *(Latest)*
 
 *[NEWS]:*
+- UI/UX: Completely change the UI with a more modern look.
+- Groups/Servers Icon: Now when you make a new group/server, you can choose a image to be your group/server icon.
+- DMs file share: Now you can upload files and images.
+- Emojis everywhere!: Implemented emoji picker for every chats.
 - Theme Editor: Added "Main Background" color picker for granular UI customization.
 - Theme Editor: Added "Reset to Default" button to restore original settings.
 - Theme Editor: New "Midnight" preset theme with cyan accents.
 
 *[IMPROVEMENTS]:*
+- Groups/Servers: Completely change how the groups/server works, now you can create a new group/server by via **(+)** button under the DM's button.
+- Group Channels: Rework how they work and improve it so that's more *user-friendly*.
+- Settings: Rework the settings, now they work fine without any bugs.
 - Theme Editor: Implemented custom high-visibility scrollbars for the modal.
 - Theme Editor: Restructured modal layout for better accessibility.
 
 *[FIXES]:*
 - DM Chat: Removed redundant border-top from the message input container.
 - Mobile: Restored standard sidebar navigation and fixed structural glitches.
+- Profile: Fix the ``aboutMe`` and ``profileBio`` after saving bug.
