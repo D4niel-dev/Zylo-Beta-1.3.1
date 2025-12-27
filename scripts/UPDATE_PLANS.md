@@ -1,4 +1,4 @@
-# Zylo App — Update, Bug Fix, Improvement Plan (v1.2.1)
+# Zylo App — Update, Bug Fix, and Improvement Plan (v1.2.1)
 
 ## Objective
 This document defines concrete improvements, confirmed bugs, and technical fixes for Zylo v1.2.1 based on direct inspection of the current frontend and backend codebase.  
@@ -87,6 +87,92 @@ This applies to the **second sidebar column**
 
 ---
 
+### 2.4 New Settings & Profile Feature Expansion
+
+> **2.4 - 1. Settings Tab Restructure**
+
+**Current Situation**
+
+- Theme changer is located inside the General settings
+
+- Settings are becoming crowded and harder to scale
+
+**Planned Changes**
+
+- Move Theme Changer into its own dedicated tab (e.g. Appearance or Themes)
+
+- Expand this tab to include:
+
+    - Theme presets management
+
+    - Custom theme editor access
+
+    - Live preview toggle
+
+    - Reset to default theme option
+
+**Benefits**
+
+- Cleaner separation of concerns
+
+- Easier future expansion of visual settings
+
+- More intuitive UX for customization-heavy users
+
+---
+
+> **2.4 - 2. Profile Tab – Secondary Sidebar Expansion**
+
+**Current Situation**
+
+- Profile tab second sidebar only contains My Profile
+
+- Underutilized space and limited navigation
+
+**Planned Changes**
+
+- Expand the profile tab secondary sidebar to include:
+
+   - My Profile
+
+   - My Cloud (relocated entry, functionality unchanged)
+
+   - Activity / Overview (future-ready)
+
+   - Saved Media (optional, future)
+
+**Notes**
+
+- The main Cloud tab will remain functional and unchanged
+
+- This change is primarily a navigation and organization enhancement
+
+**Benefits**
+
+- Better information architecture
+
+- Profile-related features are grouped logically
+
+- Scales well for future profile features
+
+---
+
+> **2.4 - 3. Additional Feature**
+
+- Profile Quick Actions Panel
+- *Add a small action panel in the profile sidebar:*
+    - Edit Profile
+    - Change Avatar / Banner
+    - Privacy Settings shortcut
+    - Rationale
+    - Reduces navigation friction
+    - Matches UX patterns seen in Discord-like applications
+
+- Profile Frames
+> *Add pre-made profile franes*
+
+---
+
 ## 3. Confirmed Bugs
 
 ### 3.1 "Where to Start" Settings Bug (Critical)
@@ -141,11 +227,6 @@ Theme selector does not affect:
 - Some UI components require reload to reflect theme change
 - Theme updates are not propagated to all mounted elements
 - The *"Midnight"* preset theme in the custom theme modal, still need to be fixed because some of the UI components are still using the light mode color.
-
-### 3.5 Mobile UI Not Fully Compatible
-**Observed**
-- Some UI components are broken when used on mobile
-- The sidebar doesn't work on mobile, soft-locking the users
 
 ---
 
@@ -616,14 +697,19 @@ function isDuplicateMessage(msgId) {
 ---
 
 ### Implementation Priority:
-1. **Critical**: 6.1, 6.2, 6.3, 6.9 (Security & Stability)
-2. **High**: 6.4, 6.5, 6.14, 6.20 (UX Improvements)
-3. **Medium**: 6.6, 6.11, 6.15, 6.16 (Feature Enhancements)
-4. **Low**: 6.18, 6.21, 6.22, 6.23 (Polish & Nice-to-haves)
+
+**For v1.2.1**
+- **Critical**: 6.1, 6.2, 6.3, 6.9 (Security & Stability)
+- **High**: 6.4, 6.5, 6.14, 6.20 (UX Improvements)
+
+**For v1.3.0**
+- **Medium**: 6.6, 6.11, 6.15, 6.16 (Feature Enhancements)
+- **Low**: 6.18, 6.21, 6.22, 6.23 (Polish & Nice-to-haves)
+- **Planned**: 2.1 ~ 2.4 (2.4 - 1 ~ 2.4 - 3) (UI Enhancements)
 
 ---
 
 ## 7. Attachments
 
-This plan references the Zylo v1.2.1 codebase as provided in the attached ZIP archive.  
+This plan references the Zylo v1.2.1 and v1.3.0 codebase as provided in the attached ZIP archive or in the project folder.
 All files should be treated as implementation references, not specifications.
