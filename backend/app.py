@@ -13,6 +13,7 @@ import random
 import urllib.request
 import urllib.error
 import ssl
+import uuid
 from typing import List, Dict
 
 # Initialize Flask app and SocketIO
@@ -36,8 +37,35 @@ def handle_disconnect():
             break
     if username_to_remove:
         del online_users[username_to_remove]
+        
+        # Update last_active in persistent storage
+        try:
+            users = load_users()
+            for u in users:
+                if u['username'] == username_to_remove:
+                    u['last_active'] = int(__import__('time').time())
+                    break
+            save_users(users)
+        except Exception as e:
+            print(f"Error updating last_active: {e}")
+
         # Broadcast offline status
-        socketio.emit('user_status_change', {'username': username_to_remove, 'status': 'offline'})
+        socketio.emit('user_status_change', {
+            'username': username_to_remove, 
+            'status': 'offline',
+            'last_active': int(__import__('time').time())
+        })
+
+@socketio.on('update_status')
+def handle_update_status(data):
+    username = data.get('username')
+    status = data.get('status') # 'online', 'away'
+    
+    if username and username in online_users:
+        socketio.emit('user_status_change', {
+            'username': username,
+            'status': status
+        })
 
 # In-memory online users: { username: sid }
 online_users = {}
@@ -538,7 +566,9 @@ def dm_messages():
         'to': to_user,
         'message': message,
         'type': msg_type,
-        'ts': __import__('time').time()
+        'ts': __import__('time').time(),
+        'id': str(uuid.uuid4()),
+        'status': 'sent'
     }
     if sticker_src:
         dm_entry['sticker_src'] = sticker_src
@@ -671,10 +701,16 @@ def handle_send_group_message(data):
         if g.get('id') == group_id:
             entry = { 'username': username, 'message': message }
             msgs = g.get('messages') or []
+            entry = { 'username': username, 'message': message, 'ts': int(__import__('time').time()) }
+            msgs = g.get('messages') or []
             msgs.append(entry)
             all_groups[idx]['messages'] = msgs
             save_groups(all_groups)
-            emit('receive_group_message', { 'groupId': group_id, 'username': username, 'message': message }, room=group_id)
+            # Emit to the correct event name and room
+            emit('receive_group_message', entry, room=group_id)
+            
+            # Add XP
+            _add_xp(username, 5)
             return
 
 @socketio.on('send_group_file')
@@ -713,6 +749,79 @@ def handle_send_group_file(data):
 @socketio.on("typing")
 def handle_typing(data):
     emit("typing", data, broadcast=True, include_self=False)
+
+@socketio.on('mark_delivered')
+def handle_mark_delivered(data):
+    msg_id = data.get('id')
+    username = data.get('username') # The recipient who received it
+    if not msg_id: return
+    
+    global dms
+    updated = False
+    target_msg = None
+    
+    for m in dms:
+        if m.get('id') == msg_id:
+            # Only update if status is 'sent' (don't downgrade from read)
+            if m.get('status') == 'sent':
+                m['status'] = 'delivered'
+                updated = True
+                target_msg = m
+            break
+            
+    if updated and target_msg:
+        save_dms(dms)
+        # Notify the sender that their message was delivered
+        # We need to know who sent it. target_msg['from']
+        sender = target_msg.get('from')
+        if sender:
+            socketio.emit('message_status_update', {
+                'id': msg_id,
+                'status': 'delivered',
+                'peer': username 
+            }, room=f"dm:{sender}")
+
+@socketio.on('mark_read')
+def handle_mark_read(data):
+    # This can mark specific message OR all messages from a user as read
+    msg_id = data.get('id')
+    reader = data.get('username') # Who is reading
+    sender = data.get('sender') # Who sent the messages (if marking all)
+    
+    global dms
+    updated_ids = []
+    
+    if msg_id:
+        for m in dms:
+            if m.get('id') == msg_id:
+                if m.get('status') != 'read':
+                    m['status'] = 'read'
+                    updated_ids.append(msg_id)
+                    # Notify sender
+                    s = m.get('from')
+                    if s:
+                        socketio.emit('message_status_update', {
+                            'id': msg_id,
+                            'status': 'read',
+                            'peer': reader
+                        }, room=f"dm:{s}")
+                break
+    elif sender and reader:
+        # Mark all messages FROM sender TO reader as read
+        for m in dms:
+            if m.get('from') == sender and m.get('to') == reader and m.get('status') != 'read':
+                m['status'] = 'read'
+                updated_ids.append(m.get('id'))
+                # Notify sender for each or bulk? 
+                # Let's emit one bulk update or individual. Individual is safer for existing logic structure.
+                socketio.emit('message_status_update', {
+                    'id': m.get('id'),
+                    'status': 'read',
+                    'peer': reader
+                }, room=f"dm:{sender}")
+    
+    if updated_ids:
+        save_dms(dms)
     
     
 @app.route("/api/stats", methods=["GET"])
@@ -1173,6 +1282,11 @@ def get_user():
 
     for user in users:
         if user.get("username") == identifier or user.get("email") == identifier:
+            # Inject real-time status
+            uname = user.get("username")
+            is_online = uname in online_users
+            user['is_online'] = is_online
+            user['status'] = 'online' if is_online else 'offline'
             return jsonify({"success": True, "user": user})
 
     return jsonify({"success": False, "error": "User not found"}), 404
@@ -1325,6 +1439,52 @@ def update_profile():
         json.dump(users, f, indent=2)
 
     return jsonify({"success": True, "user": user})
+
+def _add_xp(username: str, amount: int = 5):
+    """Adds XP to a user and handles leveling up."""
+    if not username: 
+        return
+        
+    users = load_users()
+    user_idx = -1
+    for i, u in enumerate(users):
+        if u['username'] == username:
+            user_idx = i
+            break
+            
+    if user_idx == -1:
+        return
+
+    # Initialize XP/Level if missing
+    user = users[user_idx]
+    current_xp = int(user.get('xp') or 0)
+    current_level = int(user.get('level') or 0)
+    
+    # Update XP
+    new_xp = current_xp + amount
+    
+    # Calculate Level (Simple formula: 100 XP per level)
+    new_level = new_xp // 100
+    
+    users[user_idx]['xp'] = new_xp
+    users[user_idx]['level'] = new_level
+    
+    save_users(users)
+    
+    # Notify user of level up
+    if new_level > current_level:
+        try:
+            # Emit to user's personal room (assuming they are in 'user_{username}' room? 
+            # DMs join 'user_{username}'.. wait, let's check join logic.
+            # handle_join logic: join_room(f"user_{username}")
+            from flask_socketio import emit
+            emit('level_up', {
+                'username': username,
+                'level': new_level,
+                'xp': new_xp
+            }, room=f"user_{username}")
+        except Exception as e:
+            print(f"Error emitting level up: {e}")
 
 # -------- Settings and Account Management Endpoints -------- #
 
@@ -1714,6 +1874,25 @@ def dm_history():
             conv.append(m)
     return jsonify({"success": True, "messages": conv})
 
+@app.route('/api/dm/media', methods=['GET'])
+def dm_media():
+    user_a = (request.args.get('userA') or '').strip()
+    user_b = (request.args.get('userB') or '').strip()
+    if not user_a or not user_b:
+        return jsonify({"success": False, "error": "Missing userA/userB"}), 400
+    
+    media_msgs = []
+    # Filter for messages with fileData (images/videos) or sticker_src
+    for m in (load_dms() or []):
+        if ((m.get('from') == user_a and m.get('to') == user_b) or 
+            (m.get('from') == user_b and m.get('to') == user_a)):
+            
+            # Check for media content
+            if m.get('fileData') or m.get('sticker_src') or (m.get('type') == 'image') or (m.get('type') == 'video'):
+                media_msgs.append(m)
+                
+    return jsonify({"success": True, "media": media_msgs})
+
 @app.route('/api/dm/send', methods=['POST'])
 def dm_send():
     data = request.json or {}
@@ -1771,7 +1950,11 @@ def handle_send_dm(data):
         all_dms.append(entry)
         save_dms(all_dms)
         # Emit only to the recipient (sender handles their own message locally)
+        # Emit only to the recipient (sender handles their own message locally)
         emit('receive_dm', entry, room=f"user_{to}")
+        
+        # Add XP
+        _add_xp(frm, 5)
     except Exception:
         pass
 
@@ -2175,6 +2358,20 @@ def group_messages_get(group_id):
             ]
             return jsonify({"success": True, "messages": channel_messages})
     return jsonify({"success": True, "messages": []})
+
+@app.route('/api/groups/<group_id>/media', methods=['GET'])
+def group_media_get(group_id):
+    all_groups = load_groups()
+    for g in all_groups:
+        if g.get('id') == group_id:
+            all_messages = g.get('messages', [])
+            # Filter for media messages
+            media_messages = [
+                msg for msg in all_messages 
+                if msg.get('fileData') or msg.get('sticker_src') or (msg.get('type') == 'image') or (msg.get('type') == 'video')
+            ]
+            return jsonify({"success": True, "media": media_messages})
+    return jsonify({"success": True, "media": []})
 
 @app.route('/<path:path>')
 def serve_static_file(path):

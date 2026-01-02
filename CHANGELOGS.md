@@ -1,6 +1,7 @@
 # *Zylo Changelogs* 🛠
 > *This is where all the changes are announced/archive for future official release of the app.*
 
+---
 
 ## **Zylo-Beta-1.0.0**
 
@@ -10,6 +11,7 @@
 - User profile card with avatar and banner.
 - Theme toggle (light/dark) and basic settings.
 
+---
 
 ## **Zylo-Beta-1.1.0**
 
@@ -25,6 +27,7 @@
 *[FIXS]:*
 - Fix some UI functions
 
+---
 
 ## **Zylo-Beta-v1.2.0**
 
@@ -52,8 +55,9 @@
 - Signup : fix the bug with the icon not changing to the right version when toggle.
 - Performance tweaks and minor bug fixes.
 
+---
 
-## **Zylo-Beta-v1.2.1** *(Latest)*
+## **Zylo-Beta-v1.2.1**
 
 *[NEWS]:*
 - UI/UX: Completely change the UI with a more modern look.
@@ -76,3 +80,25 @@
 - DM Chat: Removed redundant border-top from the message input container.
 - Mobile: Restored standard sidebar navigation and fixed structural glitches.
 - Profile: Fix the ``aboutMe`` and ``profileBio`` after saving bug.
+
+---
+
+## **Zylo-Beta-v1.3.0** *(Latest)*
+
+*[NEWS]:*
+- **Integrated Content**: Home page now directly includes QnA and What's New sections for immediate access.
+- **Anchor Navigation**: Sidebar links now use smooth scrolling to specific sections on the Home page.
+- **Improved Sidebar**: Added "Quick Actions" to the profile sidebar for faster avatar and banner updates.
+- **Consolidated Navigation**: Refactored the core navigation system into a unified `navigateTo` function.
+
+*[IMPROVEMENTS]:*
+- **Home UX**: Removed redundant stats cards to prioritize useful QnA and Updates.
+- **Profile UX**: Inlined Activity, Media, and Cloud into the Profile tab for a more seamless experience.
+- **Documentation**: Major professional overhaul of README.md with detailed setup guides and features.
+- **QnA**: Expanded with 15+ comprehensive questions covering all major features.
+
+*[FIXES]:*
+- **Profile Navigation**: Fixed a bug where profile sub-items would reload the entire view unnecessarily.
+- **UI Consistency**: Corrected various typos and improved alignment in mobile view.
+- **Button Highlighting**: Fixed "ghost focus" in the profile sidebar where multiple items appeared active simultaneously.
+

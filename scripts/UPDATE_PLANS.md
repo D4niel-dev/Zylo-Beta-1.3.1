@@ -314,7 +314,7 @@ Theme selector does not affect:
 
 ## 6. Other improvements, bugs and fixes:
 
-### 6.1 WebSocket Connection Management (Critical)
+### 6.1 WebSocket Connection Management (Critical) [FIXED]
 
 **Issue**
 - Socket.IO connection not properly handled when user goes offline
@@ -342,7 +342,7 @@ socket.on('reconnect', () => {
 
 ---
 
-### 6.2 Message Deduplication (Critical)
+### 6.2 Message Deduplication (Critical) [FIXED]
 
 **Issue**
 - Optimistic rendering + socket events can cause duplicate messages
@@ -366,7 +366,7 @@ function isDuplicateMessage(msgId) {
 
 ---
 
-### 6.3 File Upload Size Validation (Security)
+### 6.3 File Upload Size Validation (Security) [FIXED]
 
 **Issue**
 - No client-side file size limits
@@ -381,7 +381,7 @@ function isDuplicateMessage(msgId) {
 
 ---
 
-### 6.4 Scroll Position Management
+### 6.4 Scroll Position Management [FIXED]
 
 **Issue**
 - Chat scrolls to bottom even when user is reading history
@@ -396,7 +396,7 @@ function isDuplicateMessage(msgId) {
 
 ---
 
-### 6.5 User Status/Presence System
+### 6.5 User Status/Presence System [FIXED]
 
 **Issue**
 - No real-time online/offline indicators
@@ -411,7 +411,7 @@ function isDuplicateMessage(msgId) {
 
 ---
 
-### 6.6 Message Editing History (Enhancement)
+### 6.6 Message Editing History (Enhancement) [FIXED]
 
 **Issue**
 - Edited messages show "(edited)" but no history

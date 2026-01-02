@@ -1,30 +1,82 @@
-**PLEASE NOTED THAT** this is still a *test* version of Zylo, it'll have some bugs here and there but will be fix
-when the full release of the app is out!
+# Zylo — The Ultimate Community Workspace
 
-*The app use some of libs of Python and Javascript libs for HTML files. Some are pre-installed in the file folder, some aren't like the Python libs so you will need to install them manually by command prompt.*
+![Zylo Banner](https://raw.githubusercontent.com/D4niel-dev/Zylo-Beta/main/assets/banner.png)
 
-> **On how to install the Python libs :**
-- Download the Official Python app, any version is fine if it's above 3.1x, *older version of Python may break or bug the app*.
-- Go into the app folder and click the `This PC > ... > Zylo-Beta-1.x`, type cmd and press *Enter*, this will open the *Command Prompt* linked to the app folder.
-- Run ```pip install -r requirements.txt```, it may take a few minutes to download all the libs for Python.
-- After the libs are installed, you can run the app either by *double clicking the main.py* or *clicking the Zylo.exe*.
+Zylo is a modern, high-performance community platform designed for seamless communication, collaboration, and personal productivity. Built with a Discord-inspired aesthetic and powered by a robust Python-Flask backend, Zylo offers a rich feature set that goes beyond simple messaging.
 
-> **Storage locations :**
+## ✨ Core Features
 
-- Data JSON now lives under `backend/data/`.
-- User uploads are now under `backend/uploads/` and are served at `/uploads/<username>/<filename>`.
-- On startup, the server will migrate any legacy `data/` and `uploads/` folders from repo root into `backend/` automatically.
+- **💬 Real-time Communication**: High-speed group chats and Direct Messages with low-latency delivery.
+- **🛡️ Secure Workspace**: Privacy-focused architecture with local data storage and encrypted session handling.
+- **☁️ My Cloud**: Integrated 500MB personal cloud storage for files, documents, and media.
+- **📖 Moments**: Share your life's highlights with a dedicated social feed for you and your friends.
+- **🤖 AI Integration**: Built-in AI Chat assistant with multiple personas and models (via Gemini).
+- **🛠️ Power Tools**: Built-in utilities like a scientific calculator, speed test, and quick notes.
+- **🎨 Deep Customization**: Custom themes, profile effects, avatars, and banner customizations.
+- **📈 XP & Leveling**: Gamified experience with XP gains from active participation.
 
-> **If run on Pydroid 3 :**
+## 🚀 Getting Started
 
-- Install all the libs in the `requirements.txt`.
-- Change the `local_ip` and `host_ip` in `main.py` and `app.py`.
-- Change them to your phone IP and/or/if you're using 4G/5G, use the IP that you are using 4G/5G.
+### Prerequisites
 
-# **NOTES:**
+- **Python 3.10+** (Older versions may cause compatibility issues)
+- **Node.js** (Optional, for advanced frontend development)
 
-- The app can be run without *Internet* but some features of the app maybe disable because most of them need Wi-Fi to process.
+### Quick Setup
 
-- Please also noted that on `Pydroid 3`, it runs kinda slow so it might take some time to load to the main page of the app.
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/D4niel-dev/Zylo-Beta.git
+   cd Zylo-Beta
+   ```
 
-> **[ 6:12 PM 10/18/2025 ]**
+2. **Install Dependencies**:
+   Open a terminal/command prompt in the project root and run:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Launch Zylo**:
+   You can start the server by running:
+   ```bash
+   python main.py
+   ```
+   Or double-click `Zylo.exe` if you are on Windows.
+
+## 📱 Mobile Support (Pydroid 3)
+
+Zylo is optimized for mobile via Pydroid 3. 
+- Ensure all libraries from `requirements.txt` are installed.
+- Update `local_ip` in `main.py` and `app.py` to match your device's IP.
+- *Note: Performance on mobile devices depends on the available hardware.*
+
+## 📂 Project Structure
+
+- `backend/`: Python-Flask server, API routes, and logic.
+- `frontend/`: HTML, CSS, and Client-side JavaScript.
+- `backend/data/`: Persistent JSON storage (Users, Messages, Groups).
+- `backend/uploads/`: User-uploaded media and cloud files.
+
+## 🗺️ Roadmap
+
+- **🔒 End-to-End Encryption**: Implementing E2EE for private Direct Messages.
+- **📞 Voice & Video Calls**: Native WebRTC integration for high-quality calls.
+- **📦 Plugin System**: Allow developers to create custom widgets and bots.
+- **📱 iOS/Android Native**: Transitioning from Pydroid to a dedicated mobile app.
+
+## 🛡️ Security & Privacy
+
+Privacy is a top priority for Zylo.
+- **Local First**: All message history and user data are stored securely on your server.
+- **No Tracking**: We do not collect telemetry or usage data.
+- **Granular Permissions**: Users have full control over who can message them or view their profile.
+
+---
+
+> [!NOTE]
+> Zylo is currently in **Beta**. We are actively fixing bugs and improving performance for the full release.
+
+> [!IMPORTANT]
+> Any feedback or reports should be sent to **@d4niel_1f**.
+
+Developed with ❤️ by **Daniel**

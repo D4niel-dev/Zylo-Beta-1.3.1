@@ -142,8 +142,15 @@
 
       <div id="sub-panel-home" class="sub-panel-content hidden">
         <h3 class="sub-panel-header">Home</h3>
-        <a href="#" onclick="navigateTo('home');" class="sub-panel-item active">
+        <a href="#" onclick="navigateTo('home');" class="sub-panel-item active" data-nav="home">
           <i data-feather="home" class="w-5 h-5 mr-2"></i> Welcome
+        </a>
+        <a href="#" onclick="navigateTo('home', 'home-qna-section');" class="sub-panel-item" data-nav="home-qna">
+          <i data-feather="help-circle" class="w-5 h-5 mr-2"></i> QnA
+        </a>
+        <a href="#" onclick="navigateTo('home', 'home-changelog-section');" class="sub-panel-item"
+          data-nav="home-changelog">
+          <i data-feather="gift" class="w-5 h-5 mr-2"></i> What's New
         </a>
       </div>
 
@@ -237,30 +244,28 @@
 
       <div id="sub-panel-profile" class="sub-panel-content hidden">
         <h3 class="sub-panel-header">Profile</h3>
-        <a href="#" onclick="navigateTo('profile');" class="sub-panel-item">
+        <a href="#" onclick="navigateTo('profile'); selectProfileTab('about');" class="sub-panel-item"
+          data-nav="profile-about">
           <i data-feather="user" class="w-5 h-5 mr-2"></i> <span>My Profile</span>
         </a>
-        <a href="#" onclick="navigateTo('cloud');" class="sub-panel-item">
+        <a href="#" onclick="navigateTo('profile'); selectProfileTab('cloud');" class="sub-panel-item"
+          data-nav="profile-cloud">
           <i data-feather="cloud" class="w-5 h-5 mr-2"></i> <span>My Cloud</span>
         </a>
-        <a href="#" onclick="navigateTo('profile'); document.querySelector('[data-tab=\'activity\']').click();"
-          class="sub-panel-item">
+        <a href="#" onclick="selectProfileTab('activity');" class="sub-panel-item" data-nav="profile-activity">
           <i data-feather="activity" class="w-5 h-5 mr-2"></i> <span>Activity</span>
         </a>
-        <a href="#" onclick="navigateTo('profile'); document.querySelector('[data-tab=\'media\']').click();"
-          class="sub-panel-item">
+        <a href="#" onclick="selectProfileTab('media');" class="sub-panel-item" data-nav="profile-media">
           <i data-feather="image" class="w-5 h-5 mr-2"></i> <span>Saved Media</span>
         </a>
-
-        <h3 class="sub-panel-header mt-4">Quick Actions</h3>
-        <button onclick="document.getElementById('profileAvatarUpload')?.click();"
-          class="sub-panel-item w-full text-left">
-          <i data-feather="camera" class="w-5 h-5 mr-2"></i> <span>Change Avatar</span>
-        </button>
-        <button onclick="document.getElementById('profileBannerUpload')?.click();"
-          class="sub-panel-item w-full text-left">
-          <i data-feather="image" class="w-5 h-5 mr-2"></i> <span>Change Banner</span>
-        </button>
+        <div class="h-px bg-discord-gray-900 my-2"></div>
+        <h3 class="sub-panel-header mt-2">Quick Actions</h3>
+        <a href="#" onclick="document.getElementById('avatarInput')?.click()" class="sub-panel-item">
+          <i data-feather="camera" class="w-5 h-5 mr-2"></i> Change Avatar
+        </a>
+        <a href="#" onclick="document.getElementById('bannerInput')?.click()" class="sub-panel-item">
+          <i data-feather="image" class="w-5 h-5 mr-2"></i> Change Banner
+        </a>
       </div>
 
       <div id="sub-panel-moments" class="sub-panel-content hidden">
@@ -300,7 +305,10 @@
         onclick="navigateTo('profile')" title="My Profile">
         <img id="userPanelAvatar" src="/images/default_avatar.png" alt="Avatar" class="w-8 h-8 rounded-full">
         <div class="flex flex-col min-w-0">
-          <span id="userPanelUsername" class="text-white text-sm font-semibold truncate">ZyloUser</span>
+          <div class="flex items-center gap-1">
+            <span id="userPanelUsername" class="text-white text-sm font-semibold truncate">ZyloUser</span>
+            <span id="connectionIndicator" class="w-2 h-2 rounded-full bg-green-500" title="Connected"></span>
+          </div>
           <span id="userPanelUsertag" class="text-discord-gray-400 text-xs truncate">@zylo1234</span>
         </div>
       </div>
@@ -354,48 +362,213 @@
     <div id="mainContent" class="flex-1 flex flex-col min-h-0 overflow-hidden">
 
       <section id="tab-home"
-        class="tab-content h-full overflow-y-auto p-4 md:p-6 space-y-6 hidden animate-fadeIn scrollbar-thin scrollbar-thumb-discord-gray-900 scrollbar-track-transparent">
+        class="tab-content h-full overflow-y-auto p-4 md:p-6 space-y-8 hidden animate-fadeIn scrollbar-thin scrollbar-thumb-discord-gray-900 scrollbar-track-transparent">
 
+        <!-- Welcome Banner -->
         <div
           class="bg-gradient-to-r from-discord-blurple to-purple-500 p-6 rounded-xl shadow-md text-white text-center">
           <h1 class="text-3xl font-bold mb-2">Welcome to Zylo!</h1>
           <p class="text-sm sm:text-base">Connect. Chat. Share. All in one place!</p>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          <div class="bg-discord-gray-800 p-4 rounded-xl shadow-lg text-center">
-            <p class="text-sm text-discord-gray-400">Friends/Users</p>
-            <p class="text-lg font-semibold text-white" id="stat-users">0</p>
-          </div>
-          <div class="bg-discord-gray-800 p-4 rounded-xl shadow-lg text-center">
-            <p class="text-sm text-discord-gray-400">Messages</p>
-            <p class="text-lg font-semibold text-white" id="stat-messages">0</p>
-          </div>
-          <div class="bg-discord-gray-800 p-4 rounded-xl shadow-lg text-center">
-            <p class="text-sm text-discord-gray-400">Rooms/Groups</p>
-            <p class="text-lg font-semibold text-white" id="stat-rooms">0</p>
-          </div>
-        </div>
-
-        <div>
-          <h2 class="text-xl font-bold mb-2 text-white">💡 Zylo Tips</h2>
-          <ul class="space-y-2 text-sm text-discord-gray-300 list-disc list-inside">
-            <li>Click the ⚙️ icon in the user panel to customize your experience.</li>
-            <li>Use the chat tab to connect with your team instantly.</li>
-            <li>Upload files, images, or audio directly from the chat.</li>
-          </ul>
-        </div>
-
-        <div>
-          <h2 class="text-xl font-bold mb-2 text-white">📢 Announcements</h2>
-          <div class="bg-discord-gray-800 p-4 rounded-xl shadow-lg">
-            <div class="text-sm text-discord-gray-300 space-y-1">
-              <p>🚀 v1.2 adds Friends and Groups with room chat.</p>
-              <p>✨ Home quick stats now update from backend.</p>
-              <p>🤖 Optional AI chat toggle in Chats tab.</p>
+        <!-- Q&A Section -->
+        <div id="home-qna-section">
+          <h2 class="text-xl font-bold mb-4 text-white flex items-center gap-2">
+            <i data-feather="help-circle" class="w-5 h-5 text-discord-blurple"></i> Frequently Asked Questions
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">How do I create a group?</h3>
+              <p class="text-discord-gray-300 text-sm">Click the <strong>+</strong> button in the sidebar to create or
+                join a group.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">How does the XP system work?</h3>
+              <p class="text-discord-gray-300 text-sm">You gain XP by sending messages. Leveling up unlocks profile
+                effects!</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">Is Zylo secure?</h3>
+              <p class="text-discord-gray-300 text-sm">Yes! We prioritize your privacy. Check Settings > Security for
+                more.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">Can I customize my theme?</h3>
+              <p class="text-discord-gray-300 text-sm">Absolutely. Go to Settings > Appearance to choose or create
+                themes.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">How do I add friends?</h3>
+              <p class="text-discord-gray-300 text-sm">Go to Friends tab and click "Add Friend". Enter their username to
+                send a request.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">Can I send files in DMs?</h3>
+              <p class="text-discord-gray-300 text-sm">Yes! Click the + icon in the chat input to upload images, videos,
+                or documents.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">What are stickers?</h3>
+              <p class="text-discord-gray-300 text-sm">Stickers are fun, larger images you can send in chat. Click the
+                sticker icon to browse!</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">How do I record voice messages?</h3>
+              <p class="text-discord-gray-300 text-sm">Hold the microphone button in any chat input to record and send a
+                voice clip.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">How do I search for messages?</h3>
+              <p class="text-discord-gray-300 text-sm">Use the search bar in the top right to find specific keywords or
+                messages across channels.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">Can I block users?</h3>
+              <p class="text-discord-gray-300 text-sm">Yes. Click on a user's profile and select "Block" to prevent them
+                from messaging you.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">What is "Moments"?</h3>
+              <p class="text-discord-gray-300 text-sm">Moments is a feed where you can share photos and updates with
+                your friends, similar to a social feed.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">Is there a limit to My Cloud storage?</h3>
+              <p class="text-discord-gray-300 text-sm">Currently, Zylo offers 500MB of cloud storage for all users to
+                save their files and media.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">How do I change my status?</h3>
+              <p class="text-discord-gray-300 text-sm">Zylo automatically detects if you are away. You can also manually
+                set your status in settings.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">Can I mute specific groups or friends?</h3>
+              <p class="text-discord-gray-300 text-sm">Yes! Click the bell icon in the chat header to toggle
+                notifications for that specific chat.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">Is AI Chat private?</h3>
+              <p class="text-discord-gray-300 text-sm">Your AI Chat history is stored locally and is not shared with
+                other users or publicly.</p>
+            </div>
+            <div class="bg-discord-gray-800 p-4 rounded-xl shadow-md border border-discord-gray-700">
+              <h3 class="font-semibold text-white mb-1">How can I suggest new features?</h3>
+              <p class="text-discord-gray-300 text-sm">We love feedback! You can reach out to the developer directly
+                through the About Us section.</p>
             </div>
           </div>
         </div>
+
+        <!-- What's New Section -->
+        <div id="home-changelog-section">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+              <i data-feather="gift" class="w-5 h-5 text-green-400"></i> What's New
+            </h2>
+            <span class="bg-discord-blurple px-3 py-1 rounded-full text-xs font-bold text-white">v1.3.0</span>
+          </div>
+
+          <div class="space-y-4">
+            <!-- v1.3.0 -->
+            <div
+              class="bg-discord-gray-800 p-4 rounded-xl border border-discord-gray-700 shadow-xl overflow-hidden relative">
+              <div
+                class="absolute top-0 right-0 w-32 h-32 bg-discord-blurple/10 rounded-full -mr-16 -mt-16 blur-3xl pointer-events-none">
+              </div>
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-bold text-white text-lg">v1.3.0 — The Polish Update</h3>
+                <span class="text-xs font-bold text-discord-blurple bg-discord-blurple/10 px-2 py-1 rounded">Jan 02,
+                  2026</span>
+              </div>
+              <ul class="text-sm text-discord-gray-300 space-y-2 list-none">
+                <li class="flex gap-2">
+                  <span class="text-discord-blurple">•</span>
+                  <span><strong>Profile Refinement</strong>: Unified sidebar navigation with internal profile tabs for a
+                    seamless experience.</span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-discord-blurple">•</span>
+                  <span><strong>Enhanced QnA</strong>: Massively expanded Frequently Asked Questions section to help new
+                    users.</span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-discord-blurple">•</span>
+                  <span><strong>New Home Layout</strong>: Streamlined Home tab with stats removed (to avoid clutter) and
+                    inlined content.</span>
+                </li>
+                <li class="flex gap-2">
+                  <span class="text-discord-blurple">•</span>
+                  <span><strong>Documentation</strong>: Completely rewritten README.md with professional styling and
+                    clear setup guides.</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- v1.2.1 -->
+            <div class="bg-discord-gray-800 p-4 rounded-xl border border-discord-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-bold text-white">v1.2.1 — Latest Stable</h3>
+                <span class="text-xs text-discord-gray-400">Dec 2025</span>
+              </div>
+              <ul class="text-sm text-discord-gray-300 space-y-1 list-disc list-inside">
+                <li>🎨 Completely redesigned UI with a modern look.</li>
+                <li>🖼️ Group/Server icons: Choose an image for your group.</li>
+                <li>📎 DM file sharing: Upload files and images in DMs.</li>
+                <li>😊 Emoji picker everywhere!</li>
+                <li>🎨 Theme Editor: "Main Background" color, "Reset to Default", "Midnight" preset.</li>
+                <li>⚡ Backend stability: 2x faster processing.</li>
+                <li>🐛 Fixes: Mobile sidebar, profile bio saving, DM input border.</li>
+              </ul>
+            </div>
+
+            <!-- v1.2.0 -->
+            <div class="bg-discord-gray-800 p-4 rounded-xl border border-discord-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-bold text-white">v1.2.0</h3>
+                <span class="text-xs text-discord-gray-400">Nov 2025</span>
+              </div>
+              <ul class="text-sm text-discord-gray-300 space-y-1 list-disc list-inside">
+                <li>👤 Profile editing: Avatar/banner upload and persistence.</li>
+                <li>💬 Direct Messages: API + sockets for 1:1 chats with history.</li>
+                <li>👥 Friends API: Request, accept, decline, remove.</li>
+                <li>🏠 Groups API: Create, join/leave, group chat and file share.</li>
+                <li>📴 Offline banner and queued send support.</li>
+              </ul>
+            </div>
+
+            <!-- v1.1.0 -->
+            <div class="bg-discord-gray-800 p-4 rounded-xl border border-discord-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-bold text-white">v1.1.0</h3>
+                <span class="text-xs text-discord-gray-400">Oct 2025</span>
+              </div>
+              <ul class="text-sm text-discord-gray-300 space-y-1 list-disc list-inside">
+                <li>👥 Friends and Groups basics in UI.</li>
+                <li>📊 Community room stats on Home.</li>
+                <li>⚙️ Initial settings structure and quick panel.</li>
+              </ul>
+            </div>
+
+            <!-- v1.0.0 -->
+            <div class="bg-discord-gray-800 p-4 rounded-xl border border-discord-gray-700">
+              <div class="flex items-center justify-between mb-2">
+                <h3 class="font-bold text-white">v1.0.0 — Initial Beta</h3>
+                <span class="text-xs text-discord-gray-400">Sep 2025</span>
+              </div>
+              <ul class="text-sm text-discord-gray-300 space-y-1 list-disc list-inside">
+                <li>🚀 Initial beta release.</li>
+                <li>🔐 Core auth pages (login, signup, forgot/reset).</li>
+                <li>💬 Basic community chat with Socket.IO.</li>
+                <li>👤 User profile card with avatar and banner.</li>
+                <li>🌙 Theme toggle (light/dark).</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
       </section>
 
       <div id="tab-messages" class="tab-content chat-area flex flex-col h-full">
@@ -501,6 +674,9 @@
               </span>
               <i data-feather="at-sign" class="text-discord-gray-400 w-5 h-5"></i>
               <span id="chatHeaderTitle" class="font-bold text-white">Username</span>
+              <span id="chatHeaderStatus"
+                class="text-xs text-discord-gray-400 font-normal ml-2 flex items-center gap-1"></span>
+
             </div>
             <div class="flex gap-4 text-discord-gray-400">
               <button id="friendMuteBtn" class="hover:text-white" title="Mute Notifications"
@@ -511,6 +687,10 @@
                 onclick="startFakeCall('voice')"></i>
               <i data-feather="video" class="w-5 h-5 hover:text-white cursor-pointer"
                 onclick="startFakeCall('video')"></i>
+              <div class="h-5 w-px bg-discord-gray-600 mx-2"></div>
+              <button onclick="openMediaGallery()" class="hover:text-white" title="View Media Gallery">
+                <i data-feather="image" class="w-5 h-5"></i>
+              </button>
             </div>
           </div>
 
@@ -610,7 +790,7 @@
                 onclick="openProfileEffectsModal()">Profile Effects</button>
 
               <!-- Mobile 'More' button -->
-              <button class="profile-tab md:hidden flex items-center whitespace-nowrap"
+              <button id="profileMoreBtn" class="profile-tab md:hidden flex items-center whitespace-nowrap"
                 onclick="openMobileProfileMenu()">
                 More <i data-feather="chevron-down" class="ml-1 w-4 h-4"></i>
               </button>
@@ -670,6 +850,9 @@
                       <i data-feather="edit-2" class="w-4 h-4"></i>
                     </button>
                   </div>
+                  <footer class="mt-4 text-[10px] text-discord-gray-500 italic opacity-60">
+                    Any feedback or reports in this account will be sent to @d4niel_1f
+                  </footer>
                 </div>
               </div>
 
@@ -995,7 +1178,15 @@
               </label>
             </div>
 
-
+            <div class="flex items-center justify-between p-3 bg-discord-gray-800 rounded-lg">
+              <span id="labelReadReceipts">Send Read Receipts</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="readReceiptsToggle" class="sr-only peer">
+                <div
+                  class="w-11 h-6 bg-discord-gray-600 peer-checked:bg-blue-500 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all">
+                </div>
+              </label>
+            </div>
 
             <div id="saveSettingsBtn" class="pt-4 border-t border-discord-gray-600" style="display: none;">
               <button onclick="showSaveSettingsModal()"
@@ -1169,13 +1360,13 @@
           <div id="aboutSettings" class="settings-content w-full hidden space-y-6">
             <h2 class="text-2xl font-bold text-white">About Us</h2>
             <div class="p-3 bg-discord-gray-800 rounded-lg">
-              <p class="text-discord-gray-300"><strong>Zylo v1.2.1</strong> — Created by D4niel-dev</p>
+              <p class="text-discord-gray-300"><strong>Zylo v1.3.0</strong> — Created by D4niel-dev</p>
               <p class="text-discord-gray-400 text-sm mt-1">© 2025 Zylo. All rights reserved.</p>
             </div>
             <div class="p-3 bg-discord-gray-800 rounded-lg">
               <h3 class="text-lg font-semibold mb-2 text-white">Version Details</h3>
               <ul class="list-disc list-inside text-discord-gray-300 text-sm space-y-1">
-                <li>Build: 1.2.1-stable</li>
+                <li>Build: 1.3.0-stable</li>
                 <li>Release Date: August 2025</li>
                 <li>UI Framework: Tailwind CSS</li>
                 <li>Backend: Python (Flask)</li>
@@ -1973,15 +2164,153 @@
   <script src="/js/app-extras.js"></script>
   <script>
 
-    // Chat Functions (Socket.IO, etc. - Kept as is)
+    // Chat Functions (Socket.IO, etc.)
     const baseUrl = window.location.origin;
-    const socket = navigator.onLine ? io(baseUrl) : { emit: function () { }, on: function () { }, off: function () { } };
+    const socket = navigator.onLine ? io(baseUrl, {
+      reconnection: true,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      reconnectionAttempts: 10
+    }) : { emit: function () { }, on: function () { }, off: function () { } };
     window.socket = socket;
+
+    // Connection status management
+    function updateConnectionStatus(status) {
+      const indicator = document.getElementById('connectionIndicator');
+      if (!indicator) return;
+
+      if (status === 'connected') {
+        indicator.className = 'w-2 h-2 rounded-full bg-green-500';
+        indicator.title = 'Connected';
+      } else if (status === 'connecting') {
+        indicator.className = 'w-2 h-2 rounded-full bg-yellow-500 animate-pulse';
+        indicator.title = 'Reconnecting...';
+      } else {
+        indicator.className = 'w-2 h-2 rounded-full bg-red-500';
+        indicator.title = 'Disconnected';
+      }
+    }
+
+    function rejoinActiveRooms() {
+      const u = localStorage.getItem('savedUsername');
+      if (u) {
+        socket.emit('join_user', { username: u });
+        socket.emit('register_status', { username: u });
+      }
+      // Rejoin active group room if viewing a group
+      if (typeof currentGroupId !== 'undefined' && currentGroupId) {
+        socket.emit('join_group', { groupId: currentGroupId, username: u });
+      }
+    }
+
     if (navigator.onLine) {
       socket.on('connect', () => {
-        const u = localStorage.getItem('savedUsername');
-        if (u) socket.emit('join_user', { username: u });
+        console.log('Socket connected');
+        updateConnectionStatus('connected');
+        rejoinActiveRooms();
       });
+
+      socket.on('disconnect', (reason) => {
+        console.log('Socket disconnected:', reason);
+        updateConnectionStatus('disconnected');
+        if (typeof showToast === 'function') {
+          showToast('Connection lost. Attempting to reconnect...', 3000);
+        }
+      });
+
+      socket.on('reconnect_attempt', (attemptNumber) => {
+        console.log('Reconnection attempt:', attemptNumber);
+        updateConnectionStatus('connecting');
+      });
+
+      socket.on('reconnect', (attemptNumber) => {
+        console.log('Reconnected after', attemptNumber, 'attempts');
+        updateConnectionStatus('connected');
+        rejoinActiveRooms();
+        if (typeof showToast === 'function') {
+          showToast('Reconnected!', 2000);
+        }
+      });
+
+      socket.on('reconnect_failed', () => {
+        console.log('Reconnection failed');
+        updateConnectionStatus('disconnected');
+        if (typeof showToast === 'function') {
+          showToast('Could not reconnect. Please check your connection.', 5000);
+        }
+      });
+
+      // User Status & Presence
+      socket.on('user_status_change', (data) => {
+        const { username, status, last_active } = data;
+        updateUserStatusUI(username, status, last_active);
+      });
+    }
+
+    // Idle Detection
+    let idleTimer;
+    const IDLE_TIMEOUT = 5 * 60 * 1000; // 5 minutes
+    let isAway = false;
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      if (isAway && navigator.onLine) {
+        isAway = false;
+        const u = localStorage.getItem('savedUsername');
+        if (u) socket.emit('update_status', { username: u, status: 'online' });
+      }
+      idleTimer = setTimeout(() => {
+        isAway = true;
+        const u = localStorage.getItem('savedUsername');
+        if (u && navigator.onLine) socket.emit('update_status', { username: u, status: 'away' });
+      }, IDLE_TIMEOUT);
+    }
+
+    if (navigator.onLine) {
+      document.addEventListener('mousemove', resetIdleTimer);
+      document.addEventListener('keydown', resetIdleTimer);
+      resetIdleTimer();
+    }
+
+    function updateUserStatusUI(username, status, last_active) {
+      // 1. Sidebar DM List
+      const sidebarItem = document.querySelector(`.sidebar-dm-item[data-username="${username}"] .status-dot`);
+      if (sidebarItem) {
+        sidebarItem.className = `status-dot w-2 h-2 rounded-full absolute bottom-0 right-0 border-2 border-discord-gray-900 ${getStatusColor(status)}`;
+      }
+
+      // 2. Friend List
+      const friendItem = document.querySelector(`.friend-item[data-username="${username}"] .status-dot`);
+      if (friendItem) {
+        friendItem.className = `status-dot w-3 h-3 rounded-full border-2 border-discord-gray-800 ${getStatusColor(status)}`;
+      }
+
+      // 3. DM Header (if open)
+      if (activeFriendChat === username) {
+        const headerStatus = document.getElementById('chatHeaderStatus');
+        if (headerStatus) {
+          if (status === 'online') {
+            headerStatus.innerHTML = '<span class="text-green-500">●</span> Online';
+          } else if (status === 'away') {
+            headerStatus.innerHTML = '<span class="text-yellow-500">●</span> Away';
+          } else {
+            let timeStr = '';
+            if (last_active) {
+              const date = new Date(last_active * 1000);
+              // If today, show time, else show date
+              const isToday = new Date().toDateString() === date.toDateString();
+              timeStr = isToday ? ` today at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}` : ` on ${date.toLocaleDateString()}`;
+            }
+            headerStatus.innerHTML = `<span class="text-gray-500">●</span> Offline${timeStr ? ' • Last seen' + timeStr : ''}`;
+          }
+        }
+      }
+    }
+
+    function getStatusColor(status) {
+      if (status === 'online') return 'bg-green-500';
+      if (status === 'away') return 'bg-yellow-500';
+      return 'bg-gray-500';
     }
     const chatInput = document.getElementById("chatInput");
     const chatMessagesCommunity = document.getElementById("chatMessagesCommunity");
@@ -2106,6 +2435,12 @@
 
       return parsed;
     };
+
+    function getStatusIcon(status) {
+      if (status === 'read') return '<span class="text-blue-400 font-bold" title="Read">✓✓</span>';
+      if (status === 'delivered') return '<span class="text-gray-400 font-bold" title="Delivered">✓✓</span>';
+      return '<span class="text-discord-gray-500 font-bold" title="Sent">✓</span>';
+    }
 
     // === NEW MESSAGE RENDERING FUNCTION ===
     // This helper creates the new Discord-style message layout
@@ -2379,20 +2714,22 @@
           roleColor = roleColorMap[cachedUser.toLowerCase()] || 'text-white';
           roleTitle = cachedUser;
         } else {
-          // Async fetch role (non-blocking)
-          fetch(`/api/get-user?identifier=${encodeURIComponent(tUname)}`)
-            .then(r => r.json())
-            .then(d => {
-              if (d.success && d.user && d.user.role) {
-                avatarCache.set(tUname + '_role', d.user.role);
-                const color = roleColorMap[d.user.role.toLowerCase()] || 'text-white';
-                userSpan.className = `${color} font-semibold cursor-pointer hover:underline`;
-                if (d.user.role !== 'user') {
-                  userSpan.title = d.user.role.charAt(0).toUpperCase() + d.user.role.slice(1);
+          // Async fetch role (non-blocking) - check valid identifier first
+          if (tUname) {
+            fetch(`/api/get-user?identifier=${encodeURIComponent(tUname)}`)
+              .then(r => r.json())
+              .then(d => {
+                if (d.success && d.user && d.user.role) {
+                  avatarCache.set(tUname + '_role', d.user.role);
+                  const color = roleColorMap[d.user.role.toLowerCase()] || 'text-white';
+                  userSpan.className = `${color} font-semibold cursor-pointer hover:underline`;
+                  if (d.user.role !== 'user') {
+                    userSpan.title = d.user.role.charAt(0).toUpperCase() + d.user.role.slice(1);
+                  }
                 }
-              }
-            })
-            .catch(() => { });
+              })
+              .catch(() => { });
+          }
         }
       } catch { }
 
@@ -2409,20 +2746,15 @@
       header.appendChild(userSpan);
       header.appendChild(timeSpan);
 
-      // Status Indicator (Sent/Read)
-      const statusSpan = document.createElement("span");
-      statusSpan.className = "ml-1 text-xs select-none";
-      // Logic: If readBy > 1 (meaning someone else than author read it), show blue double check.
-      // Else show single gray check.
-      const readBy = data.readBy || [];
-      const isRead = readBy.length > 1; // Assuming author is always in readBy once sent/viewed? Or just check length.
-
-      if (isRead) {
-        statusSpan.innerHTML = '<span class="text-blue-400" title="Read">✓✓</span>';
-      } else {
-        statusSpan.innerHTML = '<span class="text-discord-gray-500" title="Sent">✓</span>';
+      // Status Indicator (Sent/Delivered/Read)
+      if (isOwnMessage) {
+        const statusSpan = document.createElement("span");
+        statusSpan.className = "ml-2 text-[10px] select-none msg-status-icon cursor-help opacity-80 hover:opacity-100";
+        // Use data.status or fallback
+        const currentStatus = data.status || (data.readBy && data.readBy.length > 1 ? 'read' : 'sent');
+        statusSpan.innerHTML = getStatusIcon(currentStatus);
+        header.appendChild(statusSpan);
       }
-      header.appendChild(statusSpan);
 
       contentWrapper.appendChild(header);
 
@@ -3389,58 +3721,68 @@
     }
 
     function renderSidebarList() {
-      const container = document.getElementById('sidebarDMList');
-      if (!container) return;
-      container.innerHTML = '';
+      const list = document.getElementById('sidebarDMList');
+      if (!list) return;
+      list.innerHTML = '';
 
-      // Discord-like: "Friends" item at the top
-      const friendsHeading = document.createElement('button');
-      friendsHeading.className = `group-item w-full ${!activeFriendChat ? 'active' : ''}`;
-      friendsHeading.innerHTML = `
-        <div class="sidebar-icon-mini">
-           <i data-feather="users" class="w-4 h-4"></i>
-        </div>
-        <div class="group-info">
-          <span class="group-name">Friends</span>
-        </div>
-      `;
-      friendsHeading.onclick = () => showFriendsDashboard();
-      container.appendChild(friendsHeading);
+      // Friends / DMs Header
+      const header = document.createElement('div');
+      header.className = "px-2 py-1 text-xs font-semibold text-discord-gray-400 uppercase tracking-wider mb-1 mt-2";
+      header.textContent = "Direct Messages";
+      list.appendChild(header);
 
-      // Render DMs Section
-      if (friendsState.friends.length > 0) {
-        const dmsHeader = document.createElement('div');
-        dmsHeader.className = 'dm-list-section mt-4';
-        dmsHeader.textContent = 'Direct Messages';
-        container.appendChild(dmsHeader);
+      const saved = friendsState.friends || [];
+      saved.forEach(friend => {
+        const btn = document.createElement('div');
+        const isActive = activeFriendChat === friend;
+        btn.className = `sidebar-dm-item group flex items-center p-2 rounded cursor-pointer transition-colors mx-2 mb-0.5 ${isActive ? 'bg-discord-gray-600/50 text-white' : 'text-discord-gray-400 hover:bg-discord-gray-700/50 hover:text-discord-gray-200'}`;
+        btn.dataset.username = friend;
+        btn.onclick = () => openDM(friend);
 
-        friendsState.friends.forEach(f => {
-          const item = document.createElement('button');
-          item.className = `group-item w-full ${activeFriendChat === f ? 'active' : ''}`;
+        // Avatar Container
+        const avatarContainer = document.createElement('div');
+        avatarContainer.className = "relative mr-3";
 
-          let avatar = avatarCache.get(f) || '/images/default_avatar.png';
+        const img = document.createElement('img');
+        img.src = avatarCache.get(friend) || '/images/default_avatar.png'; // Use cache if avail
+        img.className = "w-8 h-8 rounded-full bg-discord-gray-700 object-cover";
 
-          item.innerHTML = `
-            <div class="dm-avatar-wrapper">
-              <img src="${avatar}" alt="${f}'s avatar" class="rounded-full w-8 h-8 object-cover">
-              <span class="status-indicator w-3 h-3 rounded-full border-2 border-discord-gray-800 bg-gray-500 absolute bottom-0 right-0" data-user-status="${f}"></span>
-            </div>
-            <div class="group-info">
-              <span class="group-name text-sm opacity-80">${f}</span>
-            </div>
-          `;
+        // Fetch avatar if not cached
+        if (!avatarCache.has(friend)) {
+          getUserAvatarUrl(friend).then(url => {
+            img.src = url;
+          });
+        }
 
-          if (!avatarCache.has(f)) {
-            getUserAvatarUrl(f).then(url => {
-              const img = item.querySelector('img');
-              if (img) img.src = url;
-            });
-          }
+        // Status Dot
+        const statusDot = document.createElement('div');
+        statusDot.className = "status-dot w-2.5 h-2.5 rounded-full absolute -bottom-0.5 -right-0.5 border-2 border-discord-gray-900 bg-gray-500";
+        // Note: we will rely on socket events to update this dot color via updateUserStatusUI
+        // But we can try to get initial status if we have it?
+        // For now, default gray is fine, the socket listener will paint it.
 
-          item.onclick = () => openDM(f);
-          container.appendChild(item);
-        });
-      }
+        avatarContainer.appendChild(img);
+        avatarContainer.appendChild(statusDot);
+
+        const nameSpan = document.createElement('span');
+        nameSpan.className = "font-medium truncate flex-1";
+        nameSpan.textContent = friend;
+
+        btn.appendChild(avatarContainer);
+        btn.appendChild(nameSpan);
+
+        // Delete button placeholder (hidden by default)
+        const delBtn = document.createElement('button');
+        delBtn.className = "hidden group-hover:block text-discord-gray-400 hover:text-white p-1";
+        delBtn.innerHTML = '<i data-feather="x" class="w-3 h-3"></i>';
+        delBtn.onclick = (e) => {
+          e.stopPropagation();
+          // potentially remove friend or hide chat
+        };
+        btn.appendChild(delBtn);
+
+        list.appendChild(btn);
+      });
       feather.replace();
     }
 
@@ -3460,7 +3802,6 @@
         const color = getGroupColor(g.name);
         const initial = getGroupInitial(g.name);
 
-        let iconStyle = '';
         if (g.icon) {
           iconStyle = `background-image: url(${g.icon}); background-size: cover; background-position: center;`;
         } else if (!isActive) {
@@ -3478,7 +3819,7 @@
                 <div class="absolute left-full ml-4 px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 transition-opacity">
                    ${g.name}
                 </div>
-             `;
+      `;
         container.appendChild(item);
       });
       feather.replace();
@@ -3569,7 +3910,7 @@
               <div class="flex items-center gap-2">
                   ${actions}
               </div>
-          `;
+      `;
         return div;
       };
 
@@ -3578,9 +3919,9 @@
         // Note: We don't have real presence yet, assuming all friends are "Offline" visually for now or just listing them
         friendsState.friends.forEach(f => {
           const actions = `
-                  <button class="action-icon-btn" onclick="openDM('${f}')" title="Message"><i data-feather="message-circle" class="w-4 h-4"></i></button>
-                  <button class="action-icon-btn danger" onclick="removeFriend('${f}')" title="Remove"><i data-feather="trash-2" class="w-4 h-4"></i></button>
-              `;
+          <button class="action-icon-btn" onclick="openDM('${f}')" title="Message"><i data-feather="message-circle" class="w-4 h-4"></i></button>
+          <button class="action-icon-btn danger" onclick="removeFriend('${f}')" title="Remove"><i data-feather="trash-2" class="w-4 h-4"></i></button>
+      `;
           container.appendChild(createRow(f, "Friend", actions));
         });
         if (friendsState.friends.length === 0) container.innerHTML = `<div class="text-center mt-10 text-discord-gray-400">No friends found. Wumpus is lonely.</div>`;
@@ -3589,14 +3930,14 @@
       if (currentFriendFilter === 'pending') {
         const headerIn = document.createElement('h3');
         headerIn.className = "uppercase text-xs font-bold text-discord-gray-400 mb-2 mt-4";
-        headerIn.textContent = `Incoming - ${friendsState.incoming.length}`;
+        headerIn.textContent = `Incoming - ${friendsState.incoming.length} `;
         container.appendChild(headerIn);
 
         friendsState.incoming.forEach(f => {
           const actions = `
-                  <button class="action-icon-btn success" onclick="acceptFriend('${f}')"><i data-feather="check" class="w-4 h-4"></i></button>
-                  <button class="action-icon-btn danger" onclick="declineFriend('${f}')"><i data-feather="x" class="w-4 h-4"></i></button>
-              `;
+          <button class="action-icon-btn success" onclick="acceptFriend('${f}')"><i data-feather="check" class="w-4 h-4"></i></button>
+          <button class="action-icon-btn danger" onclick="declineFriend('${f}')"><i data-feather="x" class="w-4 h-4"></i></button>
+      `;
           container.appendChild(createRow(f, "Incoming Friend Request", actions));
         });
 
@@ -3607,8 +3948,8 @@
 
         friendsState.outgoing.forEach(f => {
           const actions = `
-                  <button class="action-icon-btn danger" onclick="cancelFriendRequest('${f}')"><i data-feather="x" class="w-4 h-4"></i></button>
-              `;
+          <button class="action-icon-btn danger" onclick="cancelFriendRequest('${f}')"><i data-feather="x" class="w-4 h-4"></i></button>
+          `;
           container.appendChild(createRow(f, "Outgoing Friend Request", actions));
         });
       }
@@ -3689,7 +4030,7 @@
       if (navigator.onLine) socket.emit('join_group', { groupId: group.id, username: localStorage.getItem('username') });
 
       try {
-        const res = await fetch(`/api/groups/${group.id}/messages`);
+        const res = await fetch(`/ api / groups / ${group.id}/messages`);
         const msgs = await res.json();
         for (const m of msgs) {
           const el = await createDiscordMessage(m);
@@ -3819,7 +4160,7 @@
     // Centralized Navigation Logic
     // Centralized Navigation Logic
     // Centralized Navigation Logic
-    window.navigateTo = function (viewName) {
+    window.navigateTo = function (viewName, sectionId) {
       // Legacy fix: map 'chats' to 'messages'
       if (viewName === 'chats') viewName = 'messages';
 
@@ -3835,16 +4176,13 @@
       });
 
       // 3. Show target tab
-      // Special handling: 'friends' view is actually displayed via the 'friends' tab, 
-      // but shares the 'messages' sub-panel.
       let targetId = `tab-${viewName}`;
-
       const target = document.getElementById(targetId);
       if (target) {
         target.classList.remove('hidden');
-        target.style.display = ''; // Allow CSS classes (flex/block) to take over
+        target.style.display = '';
 
-        // Slight delay for animation if needed
+        // Slight delay for animation
         setTimeout(() => target.classList.add('animate-fadeIn'), 10);
 
         // Update Header Title
@@ -3857,19 +4195,26 @@
             case 'moments': titleEl.textContent = 'Moments'; break;
             case 'cloud': titleEl.textContent = 'My Cloud'; break;
             case 'messages':
-              // Only reset if it doesn't look like a specific channel/DM
               if (!titleEl.textContent.trim().startsWith('#') && !titleEl.textContent.trim().startsWith('@')) {
                 titleEl.textContent = 'Messages';
               }
-              // Ensure community view is active in sidebar
               switchMessagesView('community');
               break;
             case 'friends':
               titleEl.textContent = 'Friends';
-              // Ensure friends view is active in sidebar
               switchMessagesView('friends');
               break;
             default: break;
+          }
+        }
+
+        // Scroll to section if specified
+        if (sectionId) {
+          const section = document.getElementById(sectionId);
+          if (section) {
+            setTimeout(() => {
+              section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
           }
         }
       }
@@ -3885,12 +4230,31 @@
       // 5. Update Sub-panels
       document.querySelectorAll('.sub-panel-content').forEach(p => p.classList.add('hidden'));
 
-      // Map 'friends' to 'messages' sub-panel because they share the same sidebar area
       let subPanelName = viewName;
       if (viewName === 'friends') subPanelName = 'messages';
 
       const subPanel = document.getElementById(`sub-panel-${subPanelName}`);
-      if (subPanel) subPanel.classList.remove('hidden');
+      if (subPanel) {
+        subPanel.classList.remove('hidden');
+
+        // Update active sub-panel item highlighting
+        const subItems = subPanel.querySelectorAll('.sub-panel-item');
+        subItems.forEach(item => {
+          item.classList.remove('active');
+          const navValue = item.dataset.nav;
+
+          if (sectionId && (item.getAttribute('onclick')?.includes(`'${sectionId}'`) || navValue === `${viewName}-${sectionId}`)) {
+            item.classList.add('active');
+          } else if (!sectionId) {
+            // Prefer exact data-nav match if it exists, otherwise fallback to onclick check
+            if (navValue === viewName) {
+              item.classList.add('active');
+            } else if (!navValue && item.getAttribute('onclick')?.includes(`'${viewName}'`) && !item.getAttribute('onclick')?.includes(',')) {
+              item.classList.add('active');
+            }
+          }
+        });
+      }
     };
 
     // Helper to toggle between Community and Friends views in the Messages sub-panel
@@ -4058,37 +4422,44 @@
       }
 
       const reader = new FileReader();
-      reader.onload = function (e) {
-        // Determine payload based on chat type (DM or Group) - similar to sendFriendMessage logic
+      reader.onload = async function (e) {
         const me = localStorage.getItem('savedUsername') || 'User';
 
         if (typeof activeFriendChat === 'string') {
           // DM
-          const payload = { from: me, to: activeFriendChat, fileName: file.name, fileType: file.type, fileData: e.target.result, ts: Date.now() / 1000 };
-          if (navigator.onLine) {
-            socket.emit('send_file', payload); // Note: server likely expects 'send_file' or 'send_dm_file'? 
-            // Wait, backend socket logic for DM file? 
-            // Checking 'send_file' in app.py would be wise, but assuming 'send_file' works for DM or 'send_dm' with fileData?
-            // Existing sendFile uses 'send_file'. Let's reuse that or check.
-            // Actually, sendFile (global) uses 'send_file'. sendGroupFile uses 'send_group_file'.
-            // Let's assume 'send_file' is for DMs? 
-            // But wait, sendFriendMessage uses 'send_dm' for text.
-            // Let's check backend if possible, or assume 'send_file' handles username/to?
-            // The 'sendFile' function (line 2750) emits 'send_file' with { username, fileName, fileType, fileData }. It doesn't seem to have 'to'. 
-            // It seems 'sendFile' is for PUBLIC chat or Community?
-            // If I want DM file, I might need 'send_dm' with check for fileData?
-            // Looking at sendFriendMessage (line 3705): socket.emit('send_dm', payload). payload = {from, to, message...}
-            // If I attach fileData to 'send_dm', maybe backend handles it?
+          const payload = {
+            from: me,
+            username: me,
+            to: activeFriendChat,
+            fileName: file.name,
+            fileType: file.type,
+            fileData: e.target.result,
+            ts: Date.now() / 1000,
+            message: `File: ${file.name}` // Message for display
+          };
 
-            // Let's try emitting 'send_dm' with fileData added.
-            socket.emit('send_dm', { ...payload, message: 'Sent a file' }); // Fallback message
-          } else {
-            // Offline
-            // (async () => { await createDiscordMessage({...payload, message: file.name, username: me }); })(); 
+          // Optimistic UI - show file immediately
+          const msgsContainer = document.getElementById('friendsChatMessages');
+          if (msgsContainer) {
+            const el = await createDiscordMessage({ ...payload });
+            msgsContainer.appendChild(el);
+            msgsContainer.scrollTop = msgsContainer.scrollHeight;
+            feather.replace();
+          }
+
+          // Send to server
+          if (navigator.onLine) {
+            socket.emit('send_dm', payload);
           }
         } else {
-          // Group via Friends view (unlikely but possible if activeFriendChat is object)
-          const payload = { groupId: activeFriendChat.id, username: me, fileName: file.name, fileType: file.type, fileData: e.target.result };
+          // Group via Friends view (if activeFriendChat is object)
+          const payload = {
+            groupId: activeFriendChat.id,
+            username: me,
+            fileName: file.name,
+            fileType: file.type,
+            fileData: e.target.result
+          };
           if (navigator.onLine) socket.emit('send_group_file', payload);
         }
         event.target.value = '';
@@ -4119,8 +4490,23 @@
 
       // Update Header
       document.getElementById('chatHeaderTitle').textContent = peerUsername;
+      const headerStatus = document.getElementById('chatHeaderStatus');
+      if (headerStatus) headerStatus.innerHTML = '<span class="text-gray-500">Connecting...</span>';
+
       const input = document.getElementById('friendsChatInput');
       if (input) input.placeholder = `Message @${peerUsername}`;
+
+      // Fetch user status immediately
+      if (navigator.onLine) {
+        fetch(`/api/get-user?identifier=${encodeURIComponent(peerUsername)}`)
+          .then(r => r.json())
+          .then(data => {
+            if (data.success && data.user) {
+              updateUserStatusUI(data.user.username, data.user.status, data.user.last_active);
+            }
+          })
+          .catch(e => console.error("Status fetch failed", e));
+      }
 
       // Clear & Load Messages
       const msgsContainer = document.getElementById('friendsChatMessages');
@@ -4141,8 +4527,21 @@
         for (const m of msgs) {
           const el = await createDiscordMessage({ ...m, username: m.from });
           msgsContainer.appendChild(el);
+
+          // Mark as read if I am recipient and it's not read
+          if (m.to === me && m.status !== 'read' && m.id && navigator.onLine) {
+            if ((localStorage.getItem("sendReadReceipts") ?? 'true') !== 'false') {
+              socket.emit('mark_read', { id: m.id, username: me });
+            }
+          }
         }
         msgsContainer.scrollTop = msgsContainer.scrollHeight;
+
+        // Also fire a bulk read event just in case
+        if (navigator.onLine && (localStorage.getItem("sendReadReceipts") ?? 'true') !== 'false') {
+          socket.emit('mark_read', { sender: peerUsername, username: me });
+        }
+
         feather.replace();
       } catch (e) {
         console.error("DM Load Error:", e);
@@ -4185,21 +4584,21 @@
 
     // Profile Functions (Kept as is, selectors still valid)
     // (loadStats, cropper logic, loadUserData, profile tab switching, etc... all kept as is)
-    async function loadStats() {
-      const baseUrl = window.location.origin;
-      try {
-        if (!navigator.onLine) throw new Error('offline');
-        const res = await fetch(`${baseUrl}/api/stats`);
-        const data = await res.json();
-        document.getElementById("stat-users").textContent = data.users;
-        document.getElementById("stat-messages").textContent = data.messages;
-        document.getElementById("stat-rooms").textContent = data.rooms;
-      } catch (err) { // Populate with cached or default values when offline
-        document.getElementById("stat-users").textContent = localStorage.getItem('stat-users') || '0';
-        document.getElementById("stat-messages").textContent = localStorage.getItem('stat-messages') || '0';
-        document.getElementById("stat-rooms").textContent = localStorage.getItem('stat-rooms') || '1';
-      }
-    }
+    // async function loadStats() {
+    //   const baseUrl = window.location.origin;
+    //   try {
+    //     if (!navigator.onLine) throw new Error('offline');
+    //     const res = await fetch(`${baseUrl}/api/stats`);
+    //     const data = await res.json();
+    //     document.getElementById("stat-users").textContent = data.users;
+    //     document.getElementById("stat-messages").textContent = data.messages;
+    //     document.getElementById("stat-rooms").textContent = data.rooms;
+    //   } catch (err) { // Populate with cached or default values when offline
+    //     document.getElementById("stat-users").textContent = localStorage.getItem('stat-users') || '0';
+    //     document.getElementById("stat-messages").textContent = localStorage.getItem('stat-messages') || '0';
+    //     document.getElementById("stat-rooms").textContent = localStorage.getItem('stat-rooms') || '1';
+    //   }
+    // }
 
     let cropper = null;
     let currentTarget = null;
@@ -4419,26 +4818,49 @@
       }
     }
 
+    // Unified Profile Tab Switching
+    window.selectProfileTab = function (tabName) {
+      const tabs = document.querySelectorAll("#profileTabs .profile-tab");
+      const targetBtn = Array.from(tabs).find(b => b.dataset.tab === tabName);
+
+      if (!targetBtn && tabName !== 'about') return;
+
+      const realBtn = targetBtn || Array.from(tabs).find(b => b.dataset.tab === 'about');
+      const realTab = realBtn.dataset.tab;
+
+      // Update Top Tabs UI
+      tabs.forEach(b => b.classList.remove("active", "text-white"));
+      realBtn.classList.add("active", "text-white");
+
+      // Synchronize Sidebar Highlight
+      const profileSubPanel = document.getElementById('sub-panel-profile');
+      if (profileSubPanel) {
+        profileSubPanel.querySelectorAll('.sub-panel-item').forEach(item => {
+          item.classList.toggle('active', item.dataset.nav === `profile-${realTab}`);
+        });
+      }
+
+      // Toggle panes
+      document.querySelectorAll("#profileTabContent .tab-pane").forEach(p => {
+        p.classList.toggle("hidden", p.dataset.tab !== realTab);
+      });
+
+      // Load content
+      if (realTab === 'about') loadProfileAboutTab();
+      else if (realTab === 'friends') loadMutualFriendsTab();
+      else if (realTab === 'servers') loadMutualServersTab();
+
+      // Auto-scroll on mobile
+      if (window.innerWidth < 768) {
+        realBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    };
+
     document.querySelectorAll("#profileTabs .profile-tab").forEach(btn => {
       btn.addEventListener("click", (e) => {
-        if (btn.dataset.tab === 'effects') return; // Don't handle click if it's the effects button (handled by onclick)
-
+        if (btn.dataset.tab === 'effects' || btn.id === 'profileMoreBtn') return;
         e.preventDefault();
-        document.querySelectorAll("#profileTabs .profile-tab").forEach(b => b.classList.remove("active", "text-white"));
-        btn.classList.add("active", "text-white");
-        const tab = btn.dataset.tab;
-        document.querySelectorAll("#profileTabContent .tab-pane").forEach(p => {
-          p.classList.toggle("hidden", p.dataset.tab !== tab);
-        });
-
-        // Load tab-specific content
-        if (tab === 'about') {
-          loadProfileAboutTab();
-        } else if (tab === 'friends') {
-          loadMutualFriendsTab();
-        } else if (tab === 'servers') {
-          loadMutualServersTab();
-        }
+        selectProfileTab(btn.dataset.tab);
       });
     });
 
@@ -5621,14 +6043,16 @@
         }
       });
 
-      socket.on('receive_dm', (data) => {
-        if (typeof activeFriendChat !== 'undefined' && activeFriendChat && (data.from === activeFriendChat || data.to === activeFriendChat)) {
-          const container = document.getElementById('friendsChatMessages');
-          if (container) {
-            createDiscordMessage({ ...data, username: data.from }).then(el => {
-              container.appendChild(el);
-              container.scrollTop = container.scrollHeight;
-            });
+      // Duplicate receive_dm listener removed (handled at line 4182)
+
+      socket.on('message_status_update', (data) => {
+        // data = { id, status, peer }
+        const msgEl = document.querySelector(`[data-msg-id="${data.id}"]`);
+        if (msgEl) {
+          const statusEl = msgEl.querySelector('.msg-status-icon');
+          if (statusEl) {
+            statusEl.innerHTML = getStatusIcon(data.status);
+            statusEl.title = data.status;
           }
         }
       });
@@ -6028,6 +6452,16 @@
 
       // Language runtime micro i18n for settings labels only
       applySettingsLocale();
+
+      // Privacy: Read Receipts
+      const rrToggle = document.getElementById("readReceiptsToggle");
+      if (rrToggle) {
+        rrToggle.checked = (localStorage.getItem("sendReadReceipts") ?? 'true') !== "false";
+        rrToggle.onchange = function () {
+          localStorage.setItem("sendReadReceipts", this.checked);
+          persistSettings({ sendReadReceipts: this.checked });
+        };
+      }
     }
 
     function applySettingsLocale() {
@@ -7148,66 +7582,8 @@
     });
 
     // === Tab Switching Logic ===
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));  // 1. Hide all main content tabs
-      const selectedMainTab = document.getElementById(`tab-${tabName}`);  // 2. Show the selected main content tab
-      if (selectedMainTab) selectedMainTab.classList.remove('hidden');
-
-      // 3. Update active state on Col 1 (Server Nav)
-      document.querySelectorAll('.sidebar-tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll(`[data-tab="${tabName}"]`).forEach(tab => tab.classList.add('active')); // 4. Hide all sub-panels in Col 2
-      document.querySelectorAll('.sub-panel-content').forEach(panel => panel.classList.add('hidden'));
-      const selectedSubPanel = document.getElementById(`sub-panel-${tabName}`); // 5. Show the correct sub-panel for the tab
-      if (selectedSubPanel) selectedSubPanel.classList.remove('hidden');
-
-      // 6. Update main header title
-      const titleEl = document.getElementById('main-content-title');
-      const subPanelTitleEl = document.getElementById('subPanelTitle');
-      if (titleEl) {
-        if (tabName === 'home') titleEl.textContent = 'Home';
-        if (tabName === 'messages') {
-          titleEl.textContent = '# Community'; // Default to community
-          if (subPanelTitleEl) subPanelTitleEl.textContent = 'Messages';
-        }
-        if (tabName === 'profile') {
-          titleEl.textContent = 'Profile';
-          if (subPanelTitleEl) subPanelTitleEl.textContent = 'Profile';
-        }
-        if (tabName === 'moments') {
-          titleEl.textContent = 'Moments';
-          if (subPanelTitleEl) subPanelTitleEl.textContent = 'Moments';
-        }
-        if (tabName === 'cloud') {
-          titleEl.textContent = 'My Cloud';
-          if (subPanelTitleEl) subPanelTitleEl.textContent = 'My Cloud';
-          // Cloud functionality moved to Settings > Files
-        }
-        if (tabName === 'apps') {
-          titleEl.textContent = 'Apps & Tools';
-          if (subPanelTitleEl) subPanelTitleEl.textContent = 'Apps & Tools';
-        }
-        if (tabName === 'settings') {
-          titleEl.textContent = 'Settings';
-          if (subPanelTitleEl) subPanelTitleEl.textContent = 'Settings';
-        }
-      }
-
-      // 7. Handle special tab logic
-      if (tabName === 'friends') {
-        document.querySelector("#btnMessagesTabFriends")?.click(); // Default to showing friends list (Col 2) and DM view (Col 3)
-      }
-      if (tabName === 'settings') {
-        document.querySelector("#tabBtnGeneral").click(); // Default to showing general settings
-      }
-
-      // 8. On mobile, close the sub-panel after clicking a nav icon
-      if (window.innerWidth < 768) {
-        const sidebar = document.getElementById("mobileSidebar");
-        if (sidebar && !sidebar.classList.contains("-translate-x-full")) {
-          toggleSidebar();
-        }
-      }
-    }
+    // Consolidated Navigation (navigateTo now handles switchTab logic)
+    window.switchTab = (view, section) => window.navigateTo(view, section);
 
     // === Messages View Switching ===
     function switchMessagesView(view) {
@@ -7885,8 +8261,8 @@
         replyTo: replyContext ? { id: replyContext.id, username: replyContext.username, content: replyContext.content } : null
       };
 
-      // Append message optimistically
-      await appendGroupMessage(payload);
+      // Append message optimistically - REMOVED to prevent duplication (socket handles it)
+      // await appendGroupMessage(payload);
       cancelReply();
 
       // Send to server (HTTP only - no socket emit to avoid duplicates)
@@ -7942,7 +8318,7 @@
     // Default Functions (Updated)
     window.onload = () => {
       applyHomeTabSetting(); // Apply Home tab visibility
-      loadStats();
+      // loadStats();
       loadUserData();
       const startup = (localStorage.getItem('startupPage') || 'home');  // Apply startup page if set
       switchTab(startup);
@@ -8451,18 +8827,73 @@
   </script>
   <script>
     // Profile Effects Functions
+
+    // Level requirements for effects
+    const EFFECT_LEVELS = {
+      'glow': 5,
+      'neon': 10,
+      'fire': 15,
+      'glitch': 20,
+      'rainbow': 30,
+      'blur-overlay': 2 // Banner only example
+    };
+
     function initializeProfileEffects() {
       const bannerEffectSelect = document.getElementById('bannerEffectSelect');
       const avatarEffectSelect = document.getElementById('profileEffectSelect');
+      const currentLevel = parseInt(localStorage.getItem('level') || '0', 10);
+
+      const applyLocking = (select) => {
+        if (!select) return;
+        Array.from(select.options).forEach(opt => {
+          const reqLevel = EFFECT_LEVELS[opt.value];
+          if (reqLevel && currentLevel < reqLevel) {
+            opt.disabled = true;
+            if (!opt.text.includes('(Lvl')) {
+              opt.text = `${opt.text} (Lvl ${reqLevel})`;
+            }
+          } else {
+            opt.disabled = false;
+            opt.text = opt.text.replace(/ \(Lvl \d+\)/, '');
+          }
+        });
+      };
 
       if (bannerEffectSelect) {
-        bannerEffectSelect.addEventListener('change', function () {
+        applyLocking(bannerEffectSelect);
+        // Remove existing listener to prevent duplicates if re-initialized
+        const newBannerSelect = bannerEffectSelect.cloneNode(true);
+        bannerEffectSelect.parentNode.replaceChild(newBannerSelect, bannerEffectSelect);
+
+        newBannerSelect.addEventListener('change', function () {
+          // Re-check level security client-side
+          const reqLevel = EFFECT_LEVELS[this.value];
+          const curLvl = parseInt(localStorage.getItem('level') || '0', 10);
+          if (reqLevel && curLvl < reqLevel) {
+            showToast(`Level ${reqLevel} required for this effect!`);
+            this.value = 'none'; // Reset
+            applyBannerEffect('none');
+            return;
+          }
           applyBannerEffect(this.value);
         });
       }
 
       if (avatarEffectSelect) {
-        avatarEffectSelect.addEventListener('change', function () {
+        applyLocking(avatarEffectSelect);
+        // Remove existing listener to prevent duplicates
+        const newAvatarSelect = avatarEffectSelect.cloneNode(true);
+        avatarEffectSelect.parentNode.replaceChild(newAvatarSelect, avatarEffectSelect);
+
+        newAvatarSelect.addEventListener('change', function () {
+          const reqLevel = EFFECT_LEVELS[this.value];
+          const curLvl = parseInt(localStorage.getItem('level') || '0', 10);
+          if (reqLevel && curLvl < reqLevel) {
+            showToast(`Level ${reqLevel} required for this effect!`);
+            this.value = 'none';
+            applyAvatarEffect('none');
+            return;
+          }
           applyAvatarEffect(this.value);
         });
       }
@@ -9021,7 +9452,7 @@
       overflow: hidden;
     }
 
-    #subPanelContainer.collapsed .sub-panel-content:not(#sub-panel-settings, #sub-panel-profile) {
+    #subPanelContainer.collapsed .sub-panel-content:not(#sub-panel-settings, #sub-panel-profile, #sub-panel-home) {
       display: none !important;
     }
 
@@ -10177,13 +10608,7 @@
 
     // Auto-load feed handler
     window.addEventListener('load', () => {
-      // Hook into switchTab legacy global if possible, or just poll
-      const oldSwitch = window.switchTab;
-      window.switchTab = function (tab) {
-        if (oldSwitch) oldSwitch(tab);
-        if (tab === 'moments') loadMomentsFeed();
-        if (tab === 'cloud') loadCloudFiles(); // Load cloud files when tab is active
-      };
+      // Logic for Moments/Cloud moved to navigateTo to avoid duplication
     });
 
   </script>
@@ -10436,9 +10861,7 @@
 
     window.selectMobileProfileTab = function (tabName) {
       closeMobileProfileMenu();
-      // Find the desktop/hidden button and trigger click
-      const btn = document.querySelector(`#profileTabs button[data-tab="${tabName}"]`);
-      if (btn) btn.click();
+      selectProfileTab(tabName);
     };
     // Mobile navigation function
     function mobileNavTo(tab) {
@@ -10467,6 +10890,49 @@
       feather.replace();
     });
   </script>
+  <!-- Media Gallery Modal -->
+  <div id="mediaGalleryModal"
+    class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col items-center justify-center p-4">
+    <div class="bg-discord-gray-800 w-full max-w-4xl h-[80vh] rounded-xl shadow-2xl flex flex-col overflow-hidden">
+      <!-- Header -->
+      <div class="p-4 border-b border-discord-gray-700 flex justify-between items-center bg-discord-gray-900">
+        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+          <i data-feather="image" class="w-5 h-5"></i> Media Gallery
+        </h3>
+        <button onclick="closeMediaGallery()"
+          class="text-discord-gray-400 hover:text-white bg-discord-gray-700 hover:bg-discord-gray-600 p-1 rounded-full transition">
+          <i data-feather="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Content Grid -->
+      <div id="mediaGalleryGrid"
+        class="flex-1 overflow-y-auto p-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 scrollbar-thin scrollbar-thumb-discord-gray-900">
+        <!-- Media items injected here -->
+      </div>
+
+      <!-- Empty State (Hidden by default) -->
+      <div id="mediaGalleryEmpty" class="hidden flex-1 flex flex-col items-center justify-center text-discord-gray-400">
+        <i data-feather="image" class="w-16 h-16 mb-4 opacity-50"></i>
+        <p>No media shared in this chat yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div id="lightboxModal"
+    class="fixed inset-0 bg-black/95 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm"
+    onclick="closeLightbox()">
+    <img id="lightboxImage" src="" alt="Full view"
+      class="max-w-full max-h-full object-contain rounded shadow-2xl hidden" onclick="event.stopPropagation()">
+    <video id="lightboxVideo" controls class="max-w-full max-h-full rounded shadow-2xl hidden"
+      onclick="event.stopPropagation()"></video>
+    <button onclick="closeLightbox()"
+      class="absolute top-4 right-4 text-white/50 hover:text-white bg-black/50 p-2 rounded-full backdrop-blur transition">
+      <i data-feather="x" class="w-8 h-8"></i>
+    </button>
+  </div>
+
   <!-- Edit History Modal -->
   <div id="editHistoryModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4">
     <div class="bg-discord-gray-800 w-full max-w-lg rounded-md shadow-2xl flex flex-col max-h-[80vh]">
@@ -10579,6 +11045,26 @@
           }
         }
       });
+
+      // Level Up Listener
+      socket.on('level_up', (data) => {
+        // data = { username, level, xp }
+        const me = localStorage.getItem('savedUsername');
+        if (data.username === me) {
+          localStorage.setItem('level', data.level); // Update cached level
+
+          // Show Level Up Toast
+          showToast(`🎉 Level Up! You are now Level ${data.level}!`, 5000);
+
+          // Refresh Profile if open
+          const currentTab = localStorage.getItem('lastTab');
+          if (currentTab === 'profile') {
+            document.getElementById("statLevel").textContent = data.level;
+            // Ideally refresh effect pickers too
+            initializeProfileEffects();
+          }
+        }
+      });
     }
 
     // Auto-mark messages as read when channel opens
@@ -10668,6 +11154,150 @@
     if (dnd) {
       dnd.checked = localStorage.getItem('doNotDisturb') === 'true';
     }
+
+    // --- Media Gallery Functions ---
+    async function openMediaGallery() {
+      const modal = document.getElementById('mediaGalleryModal');
+      const grid = document.getElementById('mediaGalleryGrid');
+      const empty = document.getElementById('mediaGalleryEmpty');
+
+      if (!modal || !grid) return;
+
+      modal.classList.remove('hidden');
+      grid.innerHTML = '<div class="col-span-full flex justify-center p-8"><div class="animate-spin w-8 h-8 border-4 border-discord-blurple border-t-transparent rounded-full"></div></div>'; // Loading
+      empty.classList.add('hidden');
+
+      let media = [];
+      const username = localStorage.getItem('savedUsername') || 'User';
+
+      try {
+        if (currentGroupId) {
+          // Fetch Group Media
+          const res = await fetch(`/api/groups/${currentGroupId}/media`);
+          const data = await res.json();
+          if (data.success) media = data.media;
+        } else if (activeFriendChat) {
+          // Fetch DM Media
+          // userA is me, userB is friend (activeFriendChat string)
+          const res = await fetch(`/api/dm/media?userA=${encodeURIComponent(username)}&userB=${encodeURIComponent(activeFriendChat)}`);
+          const data = await res.json();
+          if (data.success) media = data.media;
+        }
+      } catch (err) {
+        console.error("Failed to load media", err);
+      }
+
+      renderMediaGrid(media);
+    }
+
+    function closeMediaGallery() {
+      document.getElementById('mediaGalleryModal')?.classList.add('hidden');
+    }
+
+    function renderMediaGrid(items) {
+      const grid = document.getElementById('mediaGalleryGrid');
+      const empty = document.getElementById('mediaGalleryEmpty');
+      grid.innerHTML = '';
+
+      if (!items || items.length === 0) {
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      // Sort items by timestamp desc (newest first)
+      items.sort((a, b) => (b.timestamp || b.ts || 0) - (a.timestamp || a.ts || 0));
+
+      items.forEach(item => {
+        const wrapper = document.createElement('div');
+        wrapper.className = "relative group aspect-square bg-discord-gray-900 rounded-lg overflow-hidden cursor-pointer border border-transparent hover:border-discord-blurple transition";
+
+        let contentEl = null;
+
+        if (item.fileData && (item.type === 'image' || item.fileType?.startsWith('image/'))) {
+          // Image
+          contentEl = document.createElement('img');
+          contentEl.src = item.fileData.startsWith('http') ? item.fileData : (item.fileData.startsWith('data:') ? item.fileData : '/uploads/' + item.fileName); // Fallback logic
+          // Better url handling if needed
+          if (item.url) contentEl.src = item.url;
+          contentEl.className = "w-full h-full object-cover transition transform group-hover:scale-110";
+          wrapper.onclick = () => openLightbox(contentEl.src, 'image');
+
+        } else if (item.sticker_src || item.type === 'sticker') {
+          // Sticker
+          contentEl = document.createElement('img');
+          contentEl.src = item.sticker_src;
+          contentEl.className = "w-full h-full object-contain p-2 transition transform group-hover:scale-110";
+          wrapper.onclick = () => openLightbox(contentEl.src, 'image');
+
+        } else if (item.fileData && (item.type === 'video' || item.fileType?.startsWith('video/'))) {
+          // Video
+          const video = document.createElement('video');
+          video.src = item.url || item.fileData; // Prefer URL
+          video.className = "w-full h-full object-cover";
+          // No controls initially, just thumbnail-like
+          contentEl = video;
+
+          // Overlay play icon
+          const playOverlay = document.createElement('div');
+          playOverlay.className = "absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition";
+          playOverlay.innerHTML = '<i data-feather="play-circle" class="w-10 h-10 text-white opacity-80 group-hover:opacity-100 group-hover:scale-110 transition duration-200"></i>';
+          wrapper.appendChild(playOverlay);
+
+          wrapper.onclick = () => openLightbox(video.src, 'video');
+        } else {
+          return; // Skip non-visual media or unknown types
+        }
+
+        if (contentEl) wrapper.appendChild(contentEl);
+
+        // Timestamp overlay
+        const ts = item.timestamp || item.ts;
+        if (ts) {
+          const date = new Date(ts * 1000);
+          const timeStr = date.toLocaleDateString();
+          const timeOverlay = document.createElement('div');
+          timeOverlay.className = "absolute bottom-0 left-0 right-0 p-1 bg-gradient-to-t from-black/80 to-transparent text-[10px] text-white opacity-0 group-hover:opacity-100 transition px-2";
+          timeOverlay.innerText = timeStr;
+          wrapper.appendChild(timeOverlay);
+        }
+
+        grid.appendChild(wrapper);
+      });
+
+      if (typeof feather !== 'undefined') feather.replace();
+    }
+
+    function openLightbox(src, type) {
+      const modal = document.getElementById('lightboxModal');
+      const img = document.getElementById('lightboxImage');
+      const vid = document.getElementById('lightboxVideo');
+
+      modal.classList.remove('hidden');
+
+      if (type === 'image') {
+        img.src = src;
+        img.classList.remove('hidden');
+        vid.classList.add('hidden');
+        vid.pause();
+      } else {
+        vid.src = src;
+        vid.classList.remove('hidden');
+        img.classList.add('hidden');
+        vid.play(); // Auto play video in lightbox
+      }
+    }
+
+    function closeLightbox() {
+      const modal = document.getElementById('lightboxModal');
+      const vid = document.getElementById('lightboxVideo');
+      modal.classList.add('hidden');
+      vid.pause();
+      vid.src = ""; // Stop buffering
+    }
+
+    // Final alias
+    window.switchTab = window.navigateTo;
 
   </script>
 </body>
