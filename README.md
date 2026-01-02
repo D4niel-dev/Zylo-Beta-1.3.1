@@ -47,8 +47,8 @@ utilities, and AI assistance into a single unified workspace.
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/D4niel-dev/Zylo-Beta.git
-   cd Zylo-Beta
+   git clone https://github.com/D4niel-dev/Zylo-Beta-1.x.x.git
+   cd Zylo-Beta-1.x.x
    ```
 
 2. **Install Dependencies**:
@@ -62,11 +62,11 @@ utilities, and AI assistance into a single unified workspace.
    ```bash
    python main.py
    ```
-   Or double-click `Zylo.exe` if you are on Windows.
+   Or double-click `main.py` in `script/main.py` if you are on Windows.
 
-## 📱 Mobile Support (Pydroid 3)
+## 📱 Mobile Support (Pydroid 3/Pyramid)
 
-Zylo is optimized for mobile via Pydroid 3. 
+Zylo is optimized for mobile via Pydroid 3/Pyramid. 
 - Ensure all libraries from `requirements.txt` are installed.
 - Update `local_ip` in `main.py` and `app.py` to match your device's IP.
 - *Note: Performance on mobile devices depends on the available hardware.*
@@ -83,7 +83,8 @@ Zylo is optimized for mobile via Pydroid 3.
 - **🔒 End-to-End Encryption**: Implementing E2EE for private Direct Messages.
 - **📞 Voice & Video Calls**: Native WebRTC integration for high-quality calls.
 - **📦 Plugin System**: Allow developers to create custom widgets and bots.
-- **📱 iOS/Android Native**: Transitioning from Pydroid to a dedicated mobile app.
+- **📱 iOS/Android Native**: Transitioning from Pydroid/Pyramid to a dedicated mobile app.
+- **🤖 Real-time AI Chats**: Allow users to chat with a AI, but with multi-personals.
 
 ## 🛡️ Security & Privacy
 
@@ -98,8 +99,8 @@ Privacy is a top priority for Zylo.
 > Zylo is currently in **Beta**. We are actively fixing bugs and improving performance for the full release.
 
 > [!IMPORTANT]
-> Any feedback or reports should be sent to **@d4niel_1f**.
+> Any feedback or reports should/would be sent to **@d4niel_1f**.
 
-<p align="center">
+<p align="center" style="font-size: 520%; margin-top: 12px;">
   Developed with ❤️ by <strong>Daniel</strong>
 </p>
