@@ -6,66 +6,295 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <link rel="icon" href="/images/Zylo_icon.ico" type="image/x-icon" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#0b1020" />
+  <meta name="theme-color" content="#0d0d1a" />
   <script src="/files/vendor/tailwindcss.js"></script>
   <script src="/files/vendor/feather-icons.js"></script>
   <link rel="stylesheet" href="/files/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            display: ['Sora', 'sans-serif'],
+            body: ['DM Sans', 'sans-serif'],
+          },
           animation: {
-            fadeIn: 'fadeIn 0.6s ease-out',
+            fadeUp: 'fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            float: 'float 6s ease-in-out infinite',
+            shimmer: 'shimmer 2s linear infinite',
+            checkmark: 'checkmark 0.5s ease-out forwards',
           },
           keyframes: {
-            fadeIn: {
-              '0%': { opacity: '0', transform: 'translateY(15px)' },
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(30px)' },
               '100%': { opacity: '1', transform: 'translateY(0)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+              '50%': { transform: 'translateY(-15px) rotate(3deg)' }
+            },
+            shimmer: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' }
+            },
+            checkmark: {
+              '0%': { strokeDashoffset: '50' },
+              '100%': { strokeDashoffset: '0' }
             }
           }
         }
       }
     };
   </script>
+  <style>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(145deg, #0d0d1a 0%, #1a1a2e 50%, #16213e 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+        url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: -1;
+    }
+    .card-glass {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transform: scale(0.95);
+      transform-origin: center;
+    }
+    .input-field {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .input-field:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    }
+    .input-field.readonly {
+      background: rgba(255, 255, 255, 0.02);
+      border-color: rgba(255, 255, 255, 0.05);
+      color: #9ca3af;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px -10px rgba(16, 185, 129, 0.5);
+    }
+    .btn-primary:disabled {
+      transform: none;
+      box-shadow: none;
+    }
+    .floating-icon {
+      position: absolute;
+      opacity: 0.1;
+      color: #10b981;
+    }
+    .wave-bottom {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      height: 120px;
+      background: linear-gradient(0deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .password-toggle {
+      transition: all 0.2s ease;
+    }
+    .password-toggle:hover {
+      color: #10b981;
+    }
+    .strength-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .strength-fill {
+      height: 100%;
+      transition: width 0.3s ease, background 0.3s ease;
+      border-radius: 2px;
+    }
+    .success-msg { color: #34d399; }
+    .error-msg { color: #f87171; }
+
+    /* Success state animation */
+    .success-card {
+      text-align: center;
+      padding: 2rem;
+    }
+    .checkmark-circle {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkmark-circle svg {
+      width: 40px;
+      height: 40px;
+      stroke: white;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+      stroke-dasharray: 50;
+      stroke-dashoffset: 50;
+    }
+    .checkmark-circle.animate svg {
+      animation: checkmark 0.5s ease-out forwards;
+      animation-delay: 0.2s;
+    }
+    /* Compact overrides */
+    body { font-size: 14px; }
+    .card-glass { padding: 1.5rem !important; max-width: 360px !important; }
+    .input-field { padding: 0.5rem 0.75rem !important; font-size: 0.875rem !important; border-radius: 0.5rem !important; }
+    .btn-primary { padding: 0.6rem 1rem !important; font-size: 0.875rem !important; border-radius: 0.5rem !important; }
+    h1 { font-size: 1.5rem !important; margin-bottom: 0.5rem !important; }
+    .floating-icon { transform: scale(0.6); }
+    .inline-flex.w-16 { width: 3rem !important; height: 3rem !important; }
+    .inline-flex.w-16 i { width: 1.5rem !important; height: 1.5rem !important; }
+    .text-center.mb-8 { margin-bottom: 1.5rem !important; }
+  </style>
 </head>
 
-<body class="min-h-screen flex items-center justify-center px-4 transition-colors duration-500">
-  <div class="w-full max-w-sm bg-white/20 backdrop-blur-md dark:bg-gray-800/30 border border-white/10 rounded-xl shadow-2xl p-6 space-y-4">
+<body class="min-h-screen flex items-center justify-center px-4 text-white">
 
-    <h2 class="zylo-heading text-2xl font-bold text-center "><i data-feather="refresh-ccw" class="w-5 h-5"></i>
-      Reset Your Password
-    </h2>
-    <p class="zylo-heading text-sm">Enter your new password.</p>
+  <!-- Floating Decorative Icons -->
+  <div class="floating-icon animate-float" style="top: 20%; left: 8%; font-size: 3.5rem;">
+    <i data-feather="refresh-cw"></i>
+  </div>
+  <div class="floating-icon animate-float" style="top: 55%; right: 10%; font-size: 2.5rem; animation-delay: -2s;">
+    <i data-feather="unlock"></i>
+  </div>
+  <div class="floating-icon animate-float" style="bottom: 20%; left: 12%; font-size: 2rem; animation-delay: -4s;">
+    <i data-feather="check-circle"></i>
+  </div>
 
-    <input id="resetUser" type="text" placeholder="Username"
-      class="zylo-input w-full px-4 py-2 rounded-lg" />
+  <!-- Wave Bottom Decoration -->
+  <div class="wave-bottom"></div>
 
-    <div class="relative">
-      <input id="newPassword" type="password" placeholder="New Password"
-        class="zylo-input w-full px-4 py-2 pr-10 rounded-lg" />
-      <span onclick="togglePassword('newPassword', this)" 
-        class="absolute top-2.5 right-3 text-green-600 dark:text-green-400 cursor-pointer text-sm">
-        <i data-feather="eye" class="w-5 h-5"></i>
-      </span>
+  <!-- Main Card -->
+  <div id="resetCard" class="w-full max-w-md p-8 rounded-2xl card-glass animate-fadeUp" style="animation-delay: 0.1s;">
+    
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400/20 to-green-500/20 mb-5">
+        <i data-feather="lock" class="w-8 h-8 text-emerald-400"></i>
+      </div>
+      <h1 class="font-display text-3xl font-bold tracking-tight mb-2">
+        Reset Your Password
+      </h1>
+      <p class="text-gray-400 text-sm leading-relaxed">
+        Create a new secure password for your account.
+      </p>
     </div>
 
-    <div class="relative">
-      <input id="confirmNewPassword" type="password" placeholder="Confirm Password"
-        class="zylo-input w-full px-4 py-2 pr-10 rounded-lg" />
-      <span onclick="togglePassword('confirmNewPassword', this)" 
-        class="absolute top-2.5 right-3 text-green-600 dark:text-green-400 cursor-pointer text-sm">
-        <i data-feather="eye" class="w-5 h-5"></i>
-      </span>
+    <!-- Form -->
+    <div class="space-y-5">
+      <!-- Username (readonly, from URL) -->
+      <div>
+        <label for="resetUser" class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1">Account</label>
+        <input id="resetUser" type="text" placeholder="Username" readonly
+          class="input-field readonly w-full px-3 py-2 rounded-lg placeholder-gray-500 focus:outline-none font-body cursor-not-allowed" />
+      </div>
+
+      <!-- New Password -->
+      <div>
+        <label for="newPassword" class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1">New Password</label>
+        <div class="relative">
+          <input id="newPassword" type="password" placeholder="Enter new password"
+            class="input-field w-full px-3 py-2 pr-10 rounded-lg text-white placeholder-gray-500 focus:outline-none font-body" 
+            oninput="updateStrength()" />
+          <button type="button" onclick="togglePassword('newPassword', this)" 
+            class="password-toggle absolute top-1/2 -translate-y-1/2 right-3 text-gray-400">
+            <i data-feather="eye" class="w-4 h-4"></i>
+          </button>
+        </div>
+        <div class="strength-bar">
+          <div id="strengthFill" class="strength-fill" style="width: 0%; background: #ef4444;"></div>
+        </div>
+        <p id="strengthText" class="text-[10px] text-gray-500 mt-1"></p>
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label for="confirmNewPassword" class="block text-[10px] font-medium text-gray-400 uppercase tracking-wider mb-1">Confirm Password</label>
+        <div class="relative">
+          <input id="confirmNewPassword" type="password" placeholder="Confirm new password"
+            class="input-field w-full px-3 py-2 pr-10 rounded-lg text-white placeholder-gray-500 focus:outline-none font-body" />
+          <button type="button" onclick="togglePassword('confirmNewPassword', this)" 
+            class="password-toggle absolute top-1/2 -translate-y-1/2 right-3 text-gray-400">
+            <i data-feather="eye" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <button onclick="submitReset()" id="resetSubmitBtn"
+        class="btn-primary w-full py-3.5 rounded-xl font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+        <svg id="resetSpinner" class="w-5 h-5 animate-spin hidden" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 100 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+        </svg>
+        <span id="resetSubmitText">Reset Password</span>
+      </button>
     </div>
 
-    <button onclick="submitReset()" id="resetSubmitBtn"
-      class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-lg transition duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
-      <svg id="resetSpinner" class="w-4 h-4 animate-spin hidden" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" class="opacity-25"/><path d="M4 12a8 8 0 018-8" stroke="currentColor" stroke-width="4" class="opacity-75"/></svg>
-      <span id="resetSubmitText">Submit</span>
-    </button>
+    <!-- Status Message -->
+    <p id="resetResult" role="alert" class="text-sm text-center mt-5 hidden flex items-center justify-center gap-1.5"></p>
+  </div>
 
-    <p id="resetResult" class="text-sm text-center hidden"></p>
+  <!-- Success State (hidden by default) -->
+  <div id="successCard" class="w-full max-w-md p-8 rounded-2xl card-glass hidden">
+    <div class="success-card">
+      <div class="checkmark-circle" id="checkmarkCircle">
+        <svg viewBox="0 0 24 24">
+          <polyline points="6 12 10 16 18 8"></polyline>
+        </svg>
+      </div>
+      <h2 class="font-display text-2xl font-bold mb-2">Password Updated!</h2>
+      <p class="text-gray-400 text-sm mb-6">Your password has been successfully reset. You can now log in with your new password.</p>
+      <a href="login.html" class="btn-primary inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white">
+        <i data-feather="log-in" class="w-4 h-4"></i>
+        Go to Login
+      </a>
+    </div>
   </div>
 
   <script>
@@ -73,6 +302,11 @@
       const params = new URLSearchParams(window.location.search);
       const user = params.get("user");
       if (user) document.getElementById("resetUser").value = user;
+      
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        document.body.classList.remove("dark");
+      }
     };
 
     function togglePassword(id, el) {
@@ -88,6 +322,28 @@
       feather.replace();
     }
 
+    function updateStrength() {
+      const password = document.getElementById("newPassword").value;
+      const fill = document.getElementById("strengthFill");
+      const text = document.getElementById("strengthText");
+      
+      let strength = 0;
+      if (password.length >= 8) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[a-z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+      const colors = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'];
+      const labels = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong'];
+      const widths = ['20%', '40%', '60%', '80%', '100%'];
+
+      fill.style.width = password.length === 0 ? '0%' : widths[strength - 1] || '20%';
+      fill.style.background = colors[strength - 1] || colors[0];
+      text.textContent = password.length === 0 ? '' : labels[strength - 1] || labels[0];
+      text.style.color = colors[strength - 1] || colors[0];
+    }
+
     async function submitReset() {
       const username = document.getElementById("resetUser").value;
       const newPassword = document.getElementById("newPassword").value;
@@ -100,73 +356,84 @@
 
       if (!username || !newPassword || !confirm) {
         result.innerHTML = `<i data-feather="alert-circle" class="w-4 h-4"></i> Please fill out all fields.`;
-        result.classList.remove("hidden", "text-green-600");
-        result.classList.add("text-red-600");
+        result.className = "text-sm text-center mt-5 flex items-center justify-center gap-1.5 error-msg";
+        result.classList.remove("hidden");
         feather.replace();
         return;
       }
 
       if (newPassword !== confirm) {
         result.innerHTML = `<i data-feather="x-circle" class="w-4 h-4"></i> Passwords do not match.`;
-        result.classList.remove("hidden", "text-green-600");
-        result.classList.add("text-red-600");
+        result.className = "text-sm text-center mt-5 flex items-center justify-center gap-1.5 error-msg";
+        result.classList.remove("hidden");
         feather.replace();
         return;
       }
 
-      btn.disabled = true; spinner.classList.remove('hidden'); btnText.textContent = 'Submitting…';
+      if (newPassword.length < 8) {
+        result.innerHTML = `<i data-feather="alert-circle" class="w-4 h-4"></i> Password must be at least 8 characters.`;
+        result.className = "text-sm text-center mt-5 flex items-center justify-center gap-1.5 error-msg";
+        result.classList.remove("hidden");
+        feather.replace();
+        return;
+      }
 
-      const res = await fetch(`${baseUrl}/api/reset`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, newPassword })
-      });
+      btn.disabled = true; 
+      spinner.classList.remove('hidden'); 
+      btnText.textContent = 'Updating...';
 
-      const data = await res.json();
-      result.innerHTML = data.success
-        ? `<i data-feather="check-circle" class="w-4 h-4"></i> Password updated successfully!`
-        : `<i data-feather="x-circle" class="w-4 h-4"></i> ${data.error || "Reset failed."}`;
-      result.classList.remove("hidden", "text-red-600", "text-green-600");
-      result.classList.add(data.success ? "text-green-600" : "text-red-600");
-      try { new Audio(`/files/audio/${data.success ? 'ui' : 'error'}.mp3`).play().catch(()=>{}); } catch {}
-      btn.disabled = false; spinner.classList.add('hidden'); btnText.textContent = 'Submit';
+      try {
+        const res = await fetch(`${baseUrl}/api/reset`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, newPassword })
+        });
+
+        const data = await res.json();
+        
+        if (data.success) {
+          // Show success state
+          document.getElementById("resetCard").classList.add("hidden");
+          document.getElementById("successCard").classList.remove("hidden");
+          document.getElementById("checkmarkCircle").classList.add("animate");
+          try { new Audio('/files/audio/ui.mp3').play().catch(()=>{}); } catch {}
+          feather.replace();
+        } else {
+          result.innerHTML = `<i data-feather="x-circle" class="w-4 h-4"></i> ${data.error || "Reset failed."}`;
+          result.className = "text-sm text-center mt-5 flex items-center justify-center gap-1.5 error-msg";
+          result.classList.remove("hidden");
+          try { new Audio('/files/audio/error.mp3').play().catch(()=>{}); } catch {}
+        }
+      } catch (e) {
+        result.innerHTML = `<i data-feather="x-circle" class="w-4 h-4"></i> Network error. Please try again.`;
+        result.className = "text-sm text-center mt-5 flex items-center justify-center gap-1.5 error-msg";
+        result.classList.remove("hidden");
+      }
+
+      btn.disabled = false; 
+      spinner.classList.add('hidden'); 
+      btnText.textContent = 'Reset Password';
       feather.replace();
     }
 
-    // Apply saved theme (from localStorage)
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-      document.body.classList.add("dark");
-    } else if (savedTheme === 'light') {
-      document.body.classList.remove("dark");
-    }
-
     function goToPage(href) { 
-      document.body.classList.add("fade-out"); 
-      setTimeout(() => { 
-        window.location.href = href; 
-      }, 1000); 
+      document.body.style.opacity = '0';
+      document.body.style.transition = 'opacity 0.4s ease';
+      setTimeout(() => { window.location.href = href; }, 400); 
     }
 
-    // Fade-out transition on link clicks
     document.querySelectorAll("a").forEach(link => {
       if (link.hostname === window.location.hostname) {
         link.addEventListener("click", function (e) {
           e.preventDefault();
-          const href = this.getAttribute("href");
-          document.body.classList.add("fade-out");
-          setTimeout(() => {
-            goToPage(href);
-          }, 1000);
+          goToPage(this.getAttribute("href"));
         });
       }
     });
-    // Enter to submit
+
     document.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitReset(); });
   </script>
-  <script>
-    feather.replace();
-  </script>
+  <script>feather.replace();</script>
   <script src="/files/sw-register.js"></script>
 </body>
 </html>

@@ -101,6 +101,7 @@ const translations = {
         "settings.deleteAccount": "Delete Account",
         "settings.twoFactorAuth": "Two-Factor Authentication (2FA)",
         "settings.twoFactorDesc": "Add an extra layer of protection.",
+        "auth.signInWithPasskey": "Sign in with Passkey",
         "settings.showEmail": "Show Email on Profile"
     },
     es: {
@@ -200,6 +201,7 @@ const translations = {
         "settings.deleteAccount": "Eliminar cuenta",
         "settings.twoFactorAuth": "Autenticación de dos pasos (2FA)",
         "settings.twoFactorDesc": "Añade una capa extra de protección.",
+        "auth.signInWithPasskey": "Iniciar con Llave de acceso",
         "settings.showEmail": "Mostrar correo en perfil"
     },
     vi: {
@@ -299,6 +301,7 @@ const translations = {
         "settings.deleteAccount": "Xóa tài khoản",
         "settings.twoFactorAuth": "Xác thực hai yếu tố (2FA)",
         "settings.twoFactorDesc": "Thêm một lớp bảo vệ.",
+        "auth.signInWithPasskey": "Đăng nhập bằng Passkey",
         "settings.showEmail": "Hiển thị Email trên hồ sơ"
     }
 };

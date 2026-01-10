@@ -1,419 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zylo | Loading</title>
-    <link rel="icon" href="/images/Zylo_icon.ico" type="image/x-icon" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#0b1020" />
-    <script src="/files/vendor/tailwindcss.js"></script>
-    <link rel="stylesheet" href="/files/style.css" />
-    <style>
-      /* Loading specific styles */
-      .animated-bg {
-        background: linear-gradient(-45deg, #0f172a, #1e1b4b, #312e81, #1e3a8a);
-        background-size: 400% 400%;
-        animation: gradientShift 15s ease infinite;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zylo | Loading</title>
+  <link rel="icon" href="/images/Zylo_icon.ico" type="image/x-icon" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#0d0d1a" />
+  <script src="/files/vendor/tailwindcss.js"></script>
+  <link rel="stylesheet" href="/files/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(145deg, #0d0d1a 0%, #1e1b4b 50%, #312e81 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: white;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image: 
+        radial-gradient(circle at 30% 20%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 70% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: rgba(139, 92, 246, 0.5);
+      border-radius: 50%;
+      animation: particleFloat 8s ease-in-out infinite;
+    }
+    .particle:nth-child(1) { left: 10%; animation-delay: 0s; }
+    .particle:nth-child(2) { left: 20%; animation-delay: 1s; }
+    .particle:nth-child(3) { left: 35%; animation-delay: 2s; }
+    .particle:nth-child(4) { left: 50%; animation-delay: 0.5s; }
+    .particle:nth-child(5) { left: 65%; animation-delay: 1.5s; }
+    .particle:nth-child(6) { left: 80%; animation-delay: 2.5s; }
+    .particle:nth-child(7) { left: 90%; animation-delay: 0.8s; }
+    
+    @keyframes particleFloat {
+      0%, 100% { transform: translateY(100vh) scale(0); opacity: 0; }
+      10% { opacity: 1; transform: translateY(90vh) scale(1); }
+      90% { opacity: 1; transform: translateY(-10vh) scale(1); }
+      100% { transform: translateY(-20vh) scale(0); opacity: 0; }
+    }
 
-      @keyframes gradientShift {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
+    .logo-container {
+      position: relative;
+      margin-bottom: 2.5rem;
+    }
 
-      .logo-container {
-        position: relative;
-        margin-bottom: 2rem;
-      }
+    .logo-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.4) 0%, transparent 70%);
+      animation: pulseGlow 2.5s ease-in-out infinite;
+    }
 
-      .logo-pulse {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        background: radial-gradient(
-          circle,
-          rgba(59, 130, 246, 0.4) 0%,
-          rgba(59, 130, 246, 0) 70%
-        );
-        animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-        z-index: 0;
-      }
+    @keyframes pulseGlow {
+      0%, 100% { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+      50% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+    }
 
-      @keyframes pulse-ring {
-        0% {
-          transform: translate(-50%, -50%) scale(0.5);
-          opacity: 0.8;
-        }
-        100% {
-          transform: translate(-50%, -50%) scale(1.5);
-          opacity: 0;
-        }
-      }
+    .app-icon {
+      position: relative;
+      z-index: 10;
+      filter: drop-shadow(0 0 25px rgba(139, 92, 246, 0.6));
+      animation: logoFloat 4s ease-in-out infinite;
+    }
 
-      .app-icon {
-        position: relative;
-        z-index: 10;
-        filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5));
-        animation: float 6s ease-in-out infinite;
-      }
+    @keyframes logoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
 
-      @keyframes float {
-        0% {
-          transform: translateY(0px);
-        }
-        50% {
-          transform: translateY(-10px);
-        }
-        100% {
-          transform: translateY(0px);
-        }
-      }
+    .content { text-align: center; }
 
-      .progress-wrapper {
-        width: 300px;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 9999px;
-        overflow: hidden;
-        position: relative;
-        margin: 1.5rem 0 0.5rem 0;
-      }
+    .welcome-text {
+      font-family: 'Sora', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
 
-      .progress-bar {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-        background-size: 200% 100%;
-        animation: gradientMove 2s linear infinite;
-        border-radius: 9999px;
-        transition: width 0.3s ease-out;
-      }
+    .task-text {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.25rem;
+    }
 
-      @keyframes gradientMove {
-        0% {
-          background-position: 100% 0;
-        }
-        100% {
-          background-position: -100% 0;
-        }
-      }
+    .meta-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
 
-      .loading-tip {
-        font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.6);
-        margin-top: 1rem;
-        min-height: 1.5em;
-        text-align: center;
-        opacity: 0;
-        transform: translateY(10px);
-        transition: opacity 0.5s, transform 0.5s;
-      }
+    .progress-wrapper {
+      width: 320px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin: 1.5rem 0 0.75rem;
+      position: relative;
+    }
 
-      .loading-tip.show {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #8b5cf6, #ec4899, #8b5cf6);
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+      border-radius: 9999px;
+      transition: width 0.4s ease-out;
+    }
 
-      #percentage {
-        font-family: monospace;
-        color: #60a5fa;
-        font-weight: bold;
-      }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
 
-      .skip-btn {
-        margin-top: 2rem;
-        padding: 0.5rem 1rem;
-        font-size: 0.875rem;
-        color: rgba(255, 255, 255, 0.5);
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 0.5rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        opacity: 0;
-        pointer-events: none;
-      }
+    .loading-tip {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 1.5rem;
+      max-width: 300px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.5s ease;
+    }
 
-      .skip-btn.visible {
-        opacity: 1;
-        pointer-events: auto;
-      }
+    .loading-tip.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-      .skip-btn:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        border-color: rgba(255, 255, 255, 0.4);
-      }
-    </style>
-  </head>
-  <body
-    class="text-white h-screen flex items-center justify-center flex-col animated-bg overflow-hidden select-none"
-  >
-    <!-- Logo Section -->
-    <div class="logo-container">
-      <div class="logo-pulse"></div>
-      <img
-        src="/images/Zylo_icon.png"
-        alt="Zylo Logo"
-        class="app-icon w-24 h-24"
-      />
+    #percentage {
+      font-family: 'Sora', monospace;
+      color: #a78bfa;
+      font-weight: 600;
+    }
+
+    .skip-btn {
+      margin-top: 2rem;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .skip-btn.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .skip-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    
+    .logo-container, .content, .progress-wrapper, .loading-tip, .skip-btn {
+      transform: scale(0.85); /* More aggressive scale */
+      transform-origin: center;
+    }
+    
+    /* Compact overrides */
+    body { font-size: 14px; }
+    .app-icon { width: 5rem !important; height: 5rem !important; }
+    .logo-glow { width: 100px !important; height: 100px !important; }
+    .welcome-text { font-size: 1.5rem !important; }
+    .progress-wrapper { width: 240px !important; margin-top: 1rem !important; }
+  </style>
+</head>
+<body class="select-none">
+
+  <!-- Floating Particles -->
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Logo -->
+  <div class="logo-container">
+    <div class="logo-glow"></div>
+    <img src="/images/Zylo_icon.png" alt="Zylo Logo" class="app-icon w-28 h-28" />
+  </div>
+
+  <!-- Content -->
+  <div class="content">
+    <h2 id="welcomeMsg" class="welcome-text"></h2>
+    <p id="taskText" class="task-text">Initializing...</p>
+    <div class="meta-info">
+      <span id="percentage">0%</span>
+      <span>•</span>
+      <span id="timeRemaining">Calculating...</span>
     </div>
+  </div>
 
-    <!-- Welcome Message -->
-    <h2
-      id="welcomeMsg"
-      class="text-2xl font-bold tracking-wide mb-2 opacity-90"
-    ></h2>
+  <!-- Progress Bar -->
+  <div class="progress-wrapper">
+    <div id="progressBar" class="progress-bar"></div>
+  </div>
 
-    <!-- Loading Status -->
-    <div class="flex flex-col items-center gap-1">
-      <p class="text-lg font-medium text-gray-200 flex items-center gap-2">
-        <span id="taskText">Initializing...</span>
-      </p>
-      <div class="flex items-center gap-2 text-sm text-gray-400">
-        <span id="percentage">0%</span>
-        <span>•</span>
-        <span id="timeRemaining">Calculating...</span>
-      </div>
-    </div>
+  <!-- Tip -->
+  <p id="tipText" class="loading-tip show">Tip: You can customize your profile in Settings.</p>
 
-    <!-- Progress Bar -->
-    <div class="progress-wrapper">
-      <div id="progressBar" class="progress-bar"></div>
-    </div>
+  <!-- Skip Button -->
+  <button id="skipBtn" class="skip-btn" onclick="skipLoading()">Skip Loading</button>
 
-    <!-- Tips Section -->
-    <p id="tipText" class="loading-tip show">
-      Tip: You can customize your profile in Settings.
-    </p>
-
-    <!-- Skip Button -->
-    <button id="skipBtn" class="skip-btn" onclick="skipLoading()">
-      Skip Loading
-    </button>
-
-    <script>
-      const tasks = [
-        {
-          key: "init",
-          label: "Initializing Zylo engine...",
-          weight: 10,
-          duration: 400,
+  <script>
+    const tasks = [
+      { key: "init", label: "Initializing Zylo engine...", weight: 10, duration: 400 },
+      { key: "verify", label: "Verifying session...", weight: 15, duration: 600 },
+      {
+        key: "user", label: "Fetching user profile...", weight: 20, duration: 800,
+        action: async () => {
+          const u = localStorage.getItem("username");
+          if (u) { try { await fetch(`/api/get-user?identifier=${encodeURIComponent(u)}`); } catch {} }
         },
-        {
-          key: "verify",
-          label: "Verifying session...",
-          weight: 15,
-          duration: 600,
+      },
+      { key: "theme", label: "Applying visual preferences...", weight: 10, duration: 300 },
+      {
+        key: "messages", label: "Decrypting messages...", weight: 25, duration: 1000,
+        action: async () => { try { await fetch("/api/messages"); } catch {} },
+      },
+      {
+        key: "groups", label: "Syncing group channels...", weight: 15, duration: 700,
+        action: async () => {
+          const u = localStorage.getItem("username");
+          if (u) { try { await fetch(`/api/groups?username=${encodeURIComponent(u)}`); } catch {} }
         },
-        {
-          key: "user",
-          label: "Fetching user profile...",
-          weight: 20,
-          duration: 800,
-          action: async () => {
-            const u = localStorage.getItem("username");
-            if (u) {
-              try {
-                await fetch(
-                  `/api/get-user?identifier=${encodeURIComponent(u)}`
-                );
-              } catch {}
-            }
-          },
-        },
-        {
-          key: "theme",
-          label: "Applying visual preferences...",
-          weight: 10,
-          duration: 300,
-        },
-        {
-          key: "messages",
-          label: "Decrypting messages...",
-          weight: 25,
-          duration: 1000,
-          action: async () => {
-            try {
-              await fetch("/api/messages");
-            } catch {}
-          },
-        },
-        {
-          key: "groups",
-          label: "Syncing group channels...",
-          weight: 15,
-          duration: 700,
-          action: async () => {
-            const u = localStorage.getItem("username");
-            if (u) {
-              try {
-                await fetch(`/api/groups?username=${encodeURIComponent(u)}`);
-              } catch {}
-            }
-          },
-        },
-        { key: "final", label: "Finishing up...", weight: 5, duration: 400 },
-      ];
+      },
+      { key: "final", label: "Finishing up...", weight: 5, duration: 400 },
+    ];
 
-      const tips = [
-        "Tip: You can customize your profile in Settings.",
-        "Tip: Join groups to meet new people!",
-        "Tip: Use markdown to format your messages.",
-        "Tip: Drag and drop files to share them quickly.",
-        "Tip: Right-click messages for more options.",
-        "Tip: Check the Explore page for public communities.",
-      ];
+    const tips = [
+      "Tip: You can customize your profile in Settings.",
+      "Tip: Join groups to meet new people!",
+      "Tip: Use markdown to format your messages.",
+      "Tip: Drag and drop files to share them quickly.",
+      "Tip: Right-click messages for more options.",
+      "Tip: Check the Explore page for public communities.",
+    ];
 
-      const textEl = document.getElementById("taskText");
-      const progressBar = document.getElementById("progressBar");
-      const percentageEl = document.getElementById("percentage");
-      const timeEl = document.getElementById("timeRemaining");
-      const welcomeEl = document.getElementById("welcomeMsg");
-      const tipEl = document.getElementById("tipText");
-      const skipBtn = document.getElementById("skipBtn");
+    const textEl = document.getElementById("taskText");
+    const progressBar = document.getElementById("progressBar");
+    const percentageEl = document.getElementById("percentage");
+    const timeEl = document.getElementById("timeRemaining");
+    const welcomeEl = document.getElementById("welcomeMsg");
+    const tipEl = document.getElementById("tipText");
+    const skipBtn = document.getElementById("skipBtn");
 
-      let currentProgress = 0;
-      let targetProgress = 0;
-      let taskIndex = 0;
-      let startTime = Date.now();
-      let skipped = false;
+    let currentProgress = 0;
+    let targetProgress = 0;
+    let startTime = Date.now();
+    let skipped = false;
 
-      // Personalize welcome
-      const username = localStorage.getItem("username");
-      welcomeEl.textContent = username
-        ? `Welcome back, ${username}!`
-        : "Welcome to Zylo";
+    const username = localStorage.getItem("username");
+    welcomeEl.textContent = username ? `Welcome back, ${username}!` : "Welcome to Zylo";
 
-      // Theme check
-      if (localStorage.getItem("theme") === "dark") {
-        document.body.classList.add("dark");
-      }
+    if (localStorage.getItem("theme") === "dark") {
+      document.body.classList.add("dark");
+    }
 
-      // Tip cycler
-      let tipInterval = setInterval(() => {
-        tipEl.classList.remove("show");
-        setTimeout(() => {
-          tipEl.textContent = tips[Math.floor(Math.random() * tips.length)];
-          tipEl.classList.add("show");
-        }, 500);
-      }, 4000);
-
-      // Show skip button after 3 seconds
+    let tipInterval = setInterval(() => {
+      tipEl.classList.remove("show");
       setTimeout(() => {
-        skipBtn.classList.add("visible");
-      }, 3000);
+        tipEl.textContent = tips[Math.floor(Math.random() * tips.length)];
+        tipEl.classList.add("show");
+      }, 500);
+    }, 4000);
 
-      function updateProgress() {
-        if (skipped) return;
+    setTimeout(() => { skipBtn.classList.add("visible"); }, 3000);
 
-        // Smooth interpolation
-        if (currentProgress < targetProgress) {
-          currentProgress += (targetProgress - currentProgress) * 0.1;
-          if (Math.abs(targetProgress - currentProgress) < 0.1)
-            currentProgress = targetProgress;
-        }
-
-        progressBar.style.width = `${currentProgress}%`;
-        percentageEl.textContent = `${Math.round(currentProgress)}%`;
-
-        // Estimate time layout
-        const elapsedTime = Date.now() - startTime;
-        if (currentProgress > 0 && currentProgress < 100) {
-          const totalEstimatedTime = (elapsedTime / currentProgress) * 100;
-          const remaining = Math.max(
-            0,
-            Math.ceil((totalEstimatedTime - elapsedTime) / 1000)
-          );
-          timeEl.textContent = `${remaining}s remaining`;
-        } else if (currentProgress >= 100) {
-          timeEl.textContent = "Ready!";
-        }
-
-        requestAnimationFrame(updateProgress);
+    function updateProgress() {
+      if (skipped) return;
+      if (currentProgress < targetProgress) {
+        currentProgress += (targetProgress - currentProgress) * 0.1;
+        if (Math.abs(targetProgress - currentProgress) < 0.1) currentProgress = targetProgress;
       }
-
-      async function processTasks() {
-        let totalWeight = tasks.reduce((a, b) => a + b.weight, 0);
-        let accumulatedWeight = 0;
-
-        for (const task of tasks) {
-          if (skipped) break;
-
-          textEl.textContent = task.label;
-
-          // Start task async action
-          const start = Date.now();
-          if (task.action) {
-            try {
-              await task.action();
-            } catch (e) {
-              console.error(e);
-            }
-          }
-
-          // Ensure minimum duration for visual effect
-          const elapsed = Date.now() - start;
-          const remaining = Math.max(0, task.duration - elapsed);
-          if (remaining > 0) await new Promise((r) => setTimeout(r, remaining));
-
-          accumulatedWeight += task.weight;
-          targetProgress = (accumulatedWeight / totalWeight) * 100;
-        }
-
-        if (!skipped) completeLoading();
+      progressBar.style.width = `${currentProgress}%`;
+      percentageEl.textContent = `${Math.round(currentProgress)}%`;
+      const elapsedTime = Date.now() - startTime;
+      if (currentProgress > 0 && currentProgress < 100) {
+        const totalEstimatedTime = (elapsedTime / currentProgress) * 100;
+        const remaining = Math.max(0, Math.ceil((totalEstimatedTime - elapsedTime) / 1000));
+        timeEl.textContent = `${remaining}s remaining`;
+      } else if (currentProgress >= 100) {
+        timeEl.textContent = "Ready!";
       }
-
-      function completeLoading() {
-        targetProgress = 100;
-        currentProgress = 100;
-        progressBar.style.width = "100%";
-        percentageEl.textContent = "100%";
-        textEl.textContent = "Welcome!";
-        timeEl.textContent = "Launching...";
-
-        clearInterval(tipInterval);
-
-        setTimeout(() => {
-          document.body.style.transition = "opacity 0.8s ease";
-          document.body.style.opacity = "0";
-          setTimeout(() => {
-            window.location.href = "mainapp.html";
-          }, 800);
-        }, 500);
-      }
-
-      function skipLoading() {
-        skipped = true;
-        completeLoading();
-      }
-
-      // Start
       requestAnimationFrame(updateProgress);
-      window.addEventListener("load", processTasks);
+    }
 
-      // Link transition handler
-      document.addEventListener("click", (e) => {
-        const link = e.target.closest("a");
-        if (link && link.hostname === window.location.hostname) {
-          e.preventDefault();
-          document.body.style.opacity = "0";
-          setTimeout(() => (window.location.href = link.href), 500);
-        }
-      });
-    </script>
-    <script src="/files/sw-register.js"></script>
-  </body>
+    async function processTasks() {
+      let totalWeight = tasks.reduce((a, b) => a + b.weight, 0);
+      let accumulatedWeight = 0;
+      for (const task of tasks) {
+        if (skipped) break;
+        textEl.textContent = task.label;
+        const start = Date.now();
+        if (task.action) { try { await task.action(); } catch (e) { console.error(e); } }
+        const elapsed = Date.now() - start;
+        const remaining = Math.max(0, task.duration - elapsed);
+        if (remaining > 0) await new Promise((r) => setTimeout(r, remaining));
+        accumulatedWeight += task.weight;
+        targetProgress = (accumulatedWeight / totalWeight) * 100;
+      }
+      if (!skipped) completeLoading();
+    }
+
+    function completeLoading() {
+      targetProgress = 100;
+      currentProgress = 100;
+      progressBar.style.width = "100%";
+      percentageEl.textContent = "100%";
+      textEl.textContent = "Welcome!";
+      timeEl.textContent = "Launching...";
+      clearInterval(tipInterval);
+      setTimeout(() => {
+        document.body.style.transition = "opacity 0.8s ease";
+        document.body.style.opacity = "0";
+        setTimeout(() => { window.location.href = "mainapp.html"; }, 800);
+      }, 500);
+    }
+
+    function skipLoading() {
+      skipped = true;
+      completeLoading();
+    }
+
+    requestAnimationFrame(updateProgress);
+    window.addEventListener("load", processTasks);
+
+    document.addEventListener("click", (e) => {
+      const link = e.target.closest("a");
+      if (link && link.hostname === window.location.hostname) {
+        e.preventDefault();
+        document.body.style.opacity = "0";
+        setTimeout(() => (window.location.href = link.href), 500);
+      }
+    });
+  </script>
+  <script src="/files/sw-register.js"></script>
+</body>
 </html>

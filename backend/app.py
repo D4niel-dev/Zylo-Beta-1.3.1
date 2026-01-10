@@ -359,47 +359,120 @@ def send_reset_email(to_email, reset_link):
     subject = "🔐 Reset Your Zylo Password"
 
     html_body = f"""
+    <!DOCTYPE html>
     <html>
-      <body style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px; color: #111827;">
-        <div style="max-width: 520px; margin: auto; background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 30px;">
-
-          <h2 style="color: #1d4ed8; text-align: center;">Reset Your Zylo Password</h2>
-          <p>Hello,</p>
-          <p>You (or someone else) requested a password reset for your Zylo account. Click the button below to proceed:</p>
-
-          <div style="text-align: center; margin: 30px 0;">
-            <a href="{reset_link}" style="background-color: #10b981; color: white; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 8px; display: inline-block;">
-              Reset Password
-            </a>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+           body {{ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f3f4f6; color: #1f2937; margin: 0; padding: 0; }}
+           .container {{ max-width: 500px; margin: 40px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }}
+           .header {{ background: linear-gradient(135deg, #2563eb, #7c3aed); padding: 30px 20px; text-align: center; color: white; }}
+           .header h1 {{ margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }}
+           .content {{ padding: 30px; line-height: 1.6; }}
+           .btn {{ display: block; width: fit-content; margin: 30px auto; background: #2563eb; color: #ffffff !important; padding: 12px 30px; border-radius: 8px; font-weight: 600; text-decoration: none; text-align: center; transition: background 0.2s; }}
+           .btn:hover {{ background: #1d4ed8; }}
+           .footer {{ background: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; }}
+           .link-fallback {{ font-size: 12px; color: #6b7280; word-break: break-all; margin-top: 20px; }}
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Zylo Security</h1>
           </div>
-
-          <p><strong>Note:</strong> This link will expire in 30 minutes for your account's security.</p>
-
-          <p>If you didn't request this, you can safely ignore this message. No changes will be made to your account.</p>
-
-          <p style="margin-top: 30px;">Thanks,<br><strong>The Zylo Support Team</strong></p>
+          <div class="content">
+            <h2 style="margin-top: 0; color: #111827;">Password Reset Request</h2>
+            <p>Hello,</p>
+            <p>We received a request to reset the password for your Zylo account. If you didn't make this request, you can safely ignore this email.</p>
+            
+            <a href="{reset_link}" class="btn">Reset My Password</a>
+            
+            <p>For your security, this link expires in 30 minutes.</p>
+            
+            <div class="link-fallback">
+              <p>Button not working? Copy and paste this link:</p>
+              <a href="{reset_link}" style="color: #2563eb;">{reset_link}</a>
+            </div>
+          </div>
+          <div class="footer">
+            &copy; {int(__import__('datetime').datetime.now().year)} Zylo Inc. All rights reserved.<br>
+            If you need help, reply to this email.
+          </div>
         </div>
-
-        <p style="text-align: center; font-size: 12px; color: #6b7280; margin-top: 24px;">
-          Trouble with the button? Copy and paste this link into your browser:<br>
-          <a href="{reset_link}" style="color: #3b82f6;">{reset_link}</a>
-        </p>
       </body>
     </html>
     """
 
-    # Compose email
     message = MIMEMultipart("alternative")
     message["Subject"] = subject
     message["From"] = from_email
     message["To"] = to_email
-
     message.attach(MIMEText(html_body, "html"))
 
-    # Send the email
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(from_email, password)
-        server.send_message(message)
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(from_email, password)
+            server.send_message(message)
+    except Exception as e:
+        print(f"Failed to send reset email: {e}")
+
+def send_verification_email(to_email, code):
+    from_email = os.getenv("Zylo_SMTP_FROM", "zylosupp0rt@gmail.com")
+    password = os.getenv("Zylo_SMTP_PASSWORD", "kgawzxrfthcytgfu")
+
+    subject = "✨ Verify Your Zylo Account"
+
+    html_body = f"""
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+           body {{ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f3f4f6; color: #1f2937; margin: 0; padding: 0; }}
+           .container {{ max-width: 500px; margin: 40px auto; background: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }}
+           .header {{ background: linear-gradient(135deg, #10b981, #3b82f6); padding: 30px 20px; text-align: center; color: white; }}
+           .header h1 {{ margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.5px; }}
+           .content {{ padding: 30px; line-height: 1.6; text-align: center; }}
+           .code-box {{ background: #f3f4f6; border: 2px dashed #d1d5db; padding: 20px; font-size: 32px; font-family: 'Courier New', monospace; font-weight: bold; letter-spacing: 5px; color: #111827; margin: 20px 0; border-radius: 8px; }}
+           .footer {{ background: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-top: 1px solid #e5e7eb; }}
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Welcome to Zylo!</h1>
+          </div>
+          <div class="content">
+            <h2 style="margin-top: 0; color: #111827;">Verify Your Email</h2>
+            <p>Thanks for joining! To finish setting up your account, please enter the following code in the app:</p>
+            
+            <div class="code-box">
+              {code}
+            </div>
+            
+            <p style="color: #6b7280; font-size: 14px;">This code will expire in 24 hours.</p>
+          </div>
+          <div class="footer">
+            &copy; {int(__import__('datetime').datetime.now().year)} Zylo Inc. All rights reserved.<br>
+            Need help? Contact support.
+          </div>
+        </div>
+      </body>
+    </html>
+    """
+
+    message = MIMEMultipart("alternative")
+    message["Subject"] = subject
+    message["From"] = from_email
+    message["To"] = to_email
+    message.attach(MIMEText(html_body, "html"))
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login(from_email, password)
+            server.send_message(message)
+    except Exception as e:
+        print(f"Failed to send verification email: {e}")
         
 # Load existing messages and groups
 messages = load_messages()
@@ -485,10 +558,14 @@ def signup():
     with open(USER_DATA_FILE, "w") as f:
         json.dump(users, f, indent=2)
 
-    # Return verification code for simulated mode (in production, send via email)
+    with open(USER_DATA_FILE, "w") as f:
+        json.dump(users, f, indent=2)
+
+    # Send verification email
+    send_verification_email(email, verification_code)
+
     return jsonify({
         "success": True, 
-        "verification_code": verification_code,
         "message": "Account created! Please verify your email."
     })
 
@@ -738,11 +815,12 @@ def resend_verification():
             user["verification_code"] = new_code
             save_users(users)
             
-            # In production, send email here
+            # Send email
+            send_verification_email(user["email"], new_code)
+
             return jsonify({
                 "success": True, 
-                "verification_code": new_code,
-                "message": "Verification code resent"
+                "message": "Verification code resent to your email."
             })
     
     return jsonify({"success": False, "error": "User not found"}), 404
@@ -2717,6 +2795,41 @@ def read_group_message_api():
     
     return jsonify({"success": False, "error": "Group not found"}), 404
 
+
+
+@app.route("/api/auth/webauthn/challenge", methods=["POST"])
+def webauthn_challenge():
+    # Return a random 32-byte challenge encoded in Base64
+    challenge = base64.b64encode(os.urandom(32)).decode('utf-8')
+    return jsonify({"success": True, "challenge": challenge})
+
+@app.route("/api/auth/webauthn/verify", methods=["POST"])
+def webauthn_verify():
+    data = request.json or {}
+    
+    # In a real app, verify signature against stored public key for the user
+    # Here we simulate success if the frontend sent a credential
+    
+    if data.get("mock_success") or data.get("id"):
+        users = load_users()
+        target_user = None
+        if users:
+            target_user = users[0] # Pick first user to simulate "Device Owner"
+        else:
+             # Create one
+             target_user = {"username": "BiometricUser", "usertag": "@bio", "password": "bio"}
+             users.append(target_user)
+             save_users(users)
+             
+        token = create_session(target_user["username"])
+        return jsonify({
+            "success": True, 
+            "username": target_user["username"], 
+            "usertag": target_user.get("usertag", ""),
+            "session_token": token
+        })
+        
+    return jsonify({"success": False, "error": "Verification failed"}), 400
 
 # Run the app (IMPORTANT: Use socketio.run to enable Socket.IO support)
 if __name__ == "__main__":
