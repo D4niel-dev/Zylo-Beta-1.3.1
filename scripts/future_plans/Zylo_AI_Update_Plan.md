@@ -1,7 +1,7 @@
 # Zylo AI Models Integration Plan
 
-**Document Version:** 3.0  
-**Last Updated:** January 10, 2026  
+**Document Version:** 4.0  
+**Last Updated:** January 11, 2026  
 **Purpose:** Integration plan for Diszi and Zily AI models and comprehensive app improvements.
 
 ---
@@ -27,7 +27,7 @@
 14. [Community Features](#14-community-features)
 15. [Future Roadmap](#15-future-roadmap)
 16. [Marketing Strategy](#16-marketing-strategy)
-17. [Gemma 3 Integration Strategy](#17-gemma-3-integration-strategy)
+17. [Local AI Model Re-Architecture](#17-local-ai-model-re-architecture)
 
 ---
 
@@ -1678,70 +1678,163 @@ const achievements = {
 
 ---
 
-## 17. Gemma 3 Integration Strategy
+## 17. Local AI Model Re-Architecture
 
-### 17.1 Model Architecture
+### 17.1 Core Direction (NLTK + PyTorch)
 
-**Single-Model, Multi-Persona Design**
+Diszi and Zily will be powered by a **fully custom, locally trained AI system built using NLTK, pandas, and PyTorch**.
+
+The AI core is designed to be **self-owned, offline-capable, transparent, and incrementally trainable**, without reliance on external large language models or third-party inference APIs.
+
+This architecture prioritizes:
+- Full behavioral control
+- Persona consistency
+- Debuggability and explainability
+- Long-term extensibility
+
+### 17.2 High-Level Architecture Overview
+
 ```
-Gemma 3 Core
- ├── Diszi Persona Layer (Analytical)
- │   ├── Low temperature (0.2–0.35)
- │   ├── Structured system prompt
- │   ├── Tool-heavy routing
- │
- └── Zily Persona Layer (Creative)
-     ├── Higher temperature (0.7–0.9)
-     ├── Expressive system prompt
-     ├── Creativity-first routing
+User Input
+ → NLTK Preprocessing
+ → Feature Encoding
+ → PyTorch Neural Core
+ → Persona Routing Layer
+    ├── Diszi Output Path
+    └── Zily Output Path
+ → Persona-Specific Response Formatting
+```
+*A shared learning backbone is used to avoid duplication while maintaining* **strict persona separation**.
+
+### 17.3 Technology Stack
+
+#### 17.3.1 Core Libraries
+
+- **NLTK**
+  - Tokenization
+  - Normalization
+  - Lemmatization or stemming
+  - Linguistic signal extraction
+
+- **pandas**
+  - Dataset storage and management
+  - Persona labeling
+  - Dataset versioning
+  - Training / validation splits
+
+- **PyTorch**
+  - Model definition
+  - Training and optimization
+  - Inference execution
+  - Checkpoint persistence
+
+#### 17.3.2 Explicit Exclusions
+
+- Pre-trained large language models
+- Cloud-based inference APIs
+- Closed-source AI services
+- Mandatory GPU requirements (CPU-first design)
+
+### 17.4 Library Responsibility Separation
+
+**NLTK (Linguistic Layer – Non-Learning)**
+- Text preprocessing and normalization
+- Vocabulary control
+- Intent cues and structural hints
+> **NLTK is not responsible for inference or response generation.**
+
+**PyTorch (Learning Layer)**
+- Feature representation learning
+- Intent classification
+- Persona routing
+- Response selection or generation
+- Model evaluation and checkpointing
+> **All learning behavior is isolated to PyTorch.**
+
+### 17.5 Persona Design
+
+#### 17.5.1 Diszi – Analytical Persona
+
+- Dataset bias toward technical and logical content
+- Low output variance
+- Structured and deterministic phrasing
+- Accuracy and clarity prioritized over creativity
+
+#### 17.5.2 Zily – Creative Persona
+
+- Dataset bias toward conversational and expressive content
+- Higher stylistic variance
+- Emotion-aware phrasing
+- Creativity and encouragement prioritized
+
+### 17.6 Persona Enforcement Mechanisms
+
+#### One or more of the following mechanisms will be used:
+- **Persona Tokens**
+```
+<DISZI> analyze this function
+<ZILY> write a short story
 ```
 
-### 17.2 Persona Enforcement
+- **Multi-Head Output Architecture**
+  - Shared encoder
+  - Persona-specific output layers
 
-Each assistant uses:
-- Dedicated **system prompt**
-- Independent temperature / top‑p values
-- Response post-processing rules
-- Style validators (to prevent personality bleed)
+- **Persona-Specific Optimization**
+  - Distinct loss weighting or scoring strategies
 
-### 17.3 Deployment Options
+### 17.7 Training Workflow
 
-**Local (Recommended for Dev):**
-- Ollama (Gemma 3)
-- llama.cpp
-- Dockerized inference server
+1. Collect raw text data
+2. Label datasets by persona
+3. Clean and structure data using pandas
+4. Apply linguistic preprocessing with NLTK
+5. Encode features
+6. Train PyTorch model
+7. Validate intent accuracy and persona separation
+8. Save local model checkpoints
+9. Integrate model into backend services
 
-**Production:**
-- GPU-backed server (A10 / A100)
-- Load-balanced inference workers
-- Streaming token support
+### 17.8 Backend Integration
 
-### 17.4 Privacy & Compliance
+- Model inference runs locally within the backend
+- Model loaded at application startup
+- No external AI network calls
+- Support for checkpoint replacement without full redeployment
 
-- No third‑party API calls required
-- All prompts and responses processed internally
-- Optional zero‑log mode
-- User-controlled conversation retention
+### 17.9 Known Constraints
 
-### 17.5 Cost Impact
+- Not a general-purpose large language model
+- No emergent reasoning at scale
+- Output quality directly tied to dataset quality and size
+> **These constraints are intentional and aligned with project goals.**
 
-| Category | Before | After (Gemma 3) |
-|--------|--------|------------------|
-| AI API Cost | High | Near‑zero |
-| Vendor Lock‑in | Yes | None |
-| Customization | Limited | Full |
-| Offline Support | No | Yes |
+### 17.10 Future Expansion Path
 
-### 17.6 Future Expansion
+This architecture supports:
+- Migration to PyTorch Transformer models
+- Incremental dataset expansion
+- Hybrid symbolic and neural logic
+- Optional future AI modules without replacing the core pipeline
+> **All preprocessing and datasets remain reusable.**
 
-- Fine‑tuned Gemma 3‑Diszi (code + logic)
-- Fine‑tuned Gemma 3‑Zily (creative writing)
-- Experimental collaborative dual‑prompt execution
-- On‑device inference (desktop build)
+### 17.11 Strategic Benefits
 
----
+- Complete ownership of AI behavior
+- Offline-capable operation
+- Predictable and explainable outputs
+- Lower long-term operational cost
+- Stable foundation for iterative AI development
 
-**Gemma 3 adoption solidifies Diszi and Zily as independent AI identities while keeping the system maintainable, private, and scalable.**
+### 17.12 AI Development Priorities
+
+- Dataset schema definition
+- Persona labeling strategy
+- NLTK preprocessing pipeline
+- PyTorch baseline model
+- Persona routing validation
+- Backend integration
+- UI binding and feedback loop
 
 ---
 
@@ -1846,6 +1939,6 @@ This comprehensive plan provides a roadmap for integrating Diszi and Zily AI mod
 
 ---
 
-**Document End** | Version 3.0 | January 10, 2026
+**Document End** | Version 4.0 | January 11, 2026
 
 ---
